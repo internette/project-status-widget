@@ -15,7 +15,7 @@ const SignInButtons = () => {
             callback: glCallback
         },
     ];
-    return signinTypes.map(signinType => <SignInButton signinType={signinType}/> )
+    return <>{signinTypes.map(signinType => <SignInButton signinType={signinType}/> )}</>
 }
 
 export default SignInButtons;

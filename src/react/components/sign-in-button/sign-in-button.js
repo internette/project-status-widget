@@ -1,6 +1,8 @@
-const SignInButton = (signinType) => {
+const SignInButton = ({signinType}) => {
+    console.log(signinType)
     const { provider, callback } = signinType;
-    return <button onClick={callback}>{provider}</button>
+    console.log(provider);
+    return <button onClick={()=> callback}>{provider}</button>
 }
 
 export default SignInButton;
