@@ -1,11 +1,26 @@
+import { useEffect } from "react";
+import { Octokit } from "octokit";
 import SignInButton from "../sign-in-button/sign-in-button";
 
 const SignInButtons = () => {
-    const ghCallback = async ()=> {
-        console.log("placeholder");
+    useEffect(() => {
+        window.ghLogin.receive((event, { accessToken })=>{
+            ghCallback(accessToken);
+        });
+    }, [])
+    const ghCallback = async (accessToken)=> {
+        const octokit = new Octokit({ 
+            auth: accessToken
+        });
+        const response = await octokit.request('GET /user/subscriptions', {
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+        console.log(response);
     }
-    const ghClickHandler = async () => {
-        await window.login.ghLogin();
+    const ghClickHandler = () => {
+        window.ghLogin.send();
     }
     const glCallback = ()=> {
         console.log("placeholder");
@@ -24,7 +39,9 @@ const SignInButtons = () => {
             onclickHandler: glClickHandler
         },
     ];
-    return <>{signinTypes.map(signinType => <SignInButton signinType={signinType}/> )}</>
+    return <div>
+        {signinTypes.map(signinType => <SignInButton signinType={signinType}/> )}
+    </div>
 }
 
 export default SignInButtons;

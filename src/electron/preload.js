@@ -1,5 +1,10 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer} = require('electron');
 
-contextBridge.exposeInMainWorld('login', {
-    ghLogin: () => ipcRenderer.invoke('github-login')
+contextBridge.exposeInMainWorld('ghLogin', {
+    send: (channel, data)=> {
+        ipcRenderer.invoke('github-login')
+    },
+    receive: (callback)=> {
+        ipcRenderer.on("get-access-token", (event, args) => callback(event, args));
+    }
 });

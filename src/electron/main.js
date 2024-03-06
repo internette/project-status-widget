@@ -5,6 +5,7 @@ const { CLIENT_ID } = require("../constants.js");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let githubAuthWindow;
 
 function createWindow() {
     // Create the browser window.
@@ -37,25 +38,62 @@ app.on('window-all-closed', function () {
 });
 
 app.whenReady().then(() => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     ipcMain.handle('github-login', ()=> {
-        console.log('triggered');
         const options = {
             client_id: CLIENT_ID,
             scopes: ['user:email', 'notifications'], // Scopes limit access for OAuth tokens.
           };
-        const authWindow = new BrowserWindow({
+          githubAuthWindow = new BrowserWindow({
             width: 800,
             height: 600,
             show: false,
-            'node-integration': false,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
           });
+          const state = require("crypto").randomBytes(16).toString("hex");
           const githubUrl = 'https://github.com/login/oauth/authorize?';
           const authUrl =
-            githubUrl + 'client_id=' + options.client_id + '&scope=' + options.scopes;
-          authWindow.loadURL(authUrl);
-          authWindow.show();
+            githubUrl + 'client_id=' + options.client_id + "&state=" + state + "&login";
+        githubAuthWindow.loadURL(authUrl);
+        githubAuthWindow.show();
+        githubAuthWindow.webContents.openDevTools();
+
+        const handleCallback = (url) => {
+            console.log(url);
+            // If there is a code, proceed to get token from github
+            const queryString = url.split('callback')[1];
+            const urlParams = new URLSearchParams(queryString);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
+            if (code) {
+                githubAuthWindow.destroy();
+                mainWindow.webContents.send('get-access-token', {'accessToken': code});
+            } else if (error) {
+              alert(
+                "Oops! Something went wrong and we couldn't" +
+                  'log you in using Github. Please try again.'
+              );
+            }
+        }
+
+        githubAuthWindow.webContents.on('did-navigate', function(event, url) {
+            handleCallback(url);
+        });
+        githubAuthWindow.webContents.on('did-get-redirect-request', function(
+            event,
+            oldUrl,
+            newUrl
+          ) {
+            handleCallback(newUrl);
+        });
+        // Reset the authWindow on close
+        githubAuthWindow.on(
+            'closed',
+            () => {
+                githubAuthWindow = null;
+            }
+        );
     });
     createWindow();
 });
