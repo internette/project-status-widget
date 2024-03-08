@@ -60,15 +60,29 @@ app.whenReady().then(() => {
         githubAuthWindow.webContents.openDevTools();
 
         const handleCallback = (url) => {
-            console.log(url);
             // If there is a code, proceed to get token from github
             const queryString = url.split('callback')[1];
             const urlParams = new URLSearchParams(queryString);
             const code = urlParams.get('code');
             const error = urlParams.get('error');
             if (code) {
+                const { net } = require('electron');
                 githubAuthWindow.destroy();
-                mainWindow.webContents.send('get-access-token', {'accessToken': code});
+                const tokenUrl = 'https://project-status-widget-api.vercel.app/api/get-token?authToken=' + code; 
+                const request = net.request(tokenUrl);
+                let oAuthQuery = '';
+                request.on('response', (response) => {
+                    response.on('data', (chunk) => {
+                        oAuthQuery += chunk;
+                    })
+                    response.on('end', () => {
+                        oAuthQuery = oAuthQuery.split(':');
+                        // oAuthQuery = '?' + oAuthQuery;
+                        // const oauthResParams = new URLSearchParams(oAuthQuery);
+                        console.log(oAuthQuery);
+                    })
+                  })
+                  request.end();
             } else if (error) {
               alert(
                 "Oops! Something went wrong and we couldn't" +
