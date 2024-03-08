@@ -19,7 +19,7 @@ const SignInButtons = () => {
         });
         const username = await userResp.data.login;
         if(username){
-            const searchQueryParams = `is:open is:pr involves:${username} archived:false`;
+            const searchQueryParams = `is:open is:pr involves:${username}`;
             const searchQuery = '?q=' + encodeURIComponent(searchQueryParams);
             const response = await octokit.request('GET /search/issues'+searchQuery, {
                 headers: {
