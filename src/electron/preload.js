@@ -5,6 +5,6 @@ contextBridge.exposeInMainWorld('ghLogin', {
         ipcRenderer.invoke('github-login')
     },
     receive: (callback)=> {
-        ipcRenderer.on("get-access-token", (event, args) => callback(event, args));
+        ipcRenderer.on("set-gh-access-token", (event, args) => callback(event, args));
     }
 });

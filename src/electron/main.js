@@ -76,10 +76,12 @@ app.whenReady().then(() => {
                         oAuthQuery += chunk;
                     })
                     response.on('end', () => {
-                        oAuthQuery = oAuthQuery.split(':');
-                        // oAuthQuery = '?' + oAuthQuery;
-                        // const oauthResParams = new URLSearchParams(oAuthQuery);
-                        console.log(oAuthQuery);
+                        oAuthQuery = oAuthQuery.split(':')[0];
+                        const oauthResParams = new URLSearchParams(oAuthQuery);
+                        const accessToken = oauthResParams.get('access_token');
+                        mainWindow.webContents.send('set-gh-access-token', {
+                            access_token: accessToken
+                        });
                     })
                   })
                   request.end();
