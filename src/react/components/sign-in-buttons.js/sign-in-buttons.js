@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Octokit } from "octokit";
-import SignInButton from "../sign-in-button/sign-in-button";
+import SignInButton from "../sign-in-button/sign-in-button.js";
 
 const SignInButtons = () => {
   useEffect(() => {
