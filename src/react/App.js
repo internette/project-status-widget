@@ -11,11 +11,7 @@ function App() {
       {authToken.length > 0 ? (
         <PrList prs={prs} />
       ) : (
-        <SignInButtons
-          setAuthToken={setAuthToken}
-          authToken={authToken}
-          setPrs={setPrs}
-        />
+        <SignInButtons setAuthToken={setAuthToken} setPrs={setPrs} />
       )}
     </div>
   );
