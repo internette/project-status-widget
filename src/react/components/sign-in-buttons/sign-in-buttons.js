@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Octokit } from "octokit";
 import SignInButton from "../sign-in-button/sign-in-button";
 
-const AllSignInButtons = () => {
+const SignInButtons = () => {
   useEffect(() => {
     window.ghLogin.receive((event, args) => {
       ghCallback(args);
@@ -62,4 +62,4 @@ const AllSignInButtons = () => {
   );
 };
 
-export default AllSignInButtons;
+export default SignInButtons;
