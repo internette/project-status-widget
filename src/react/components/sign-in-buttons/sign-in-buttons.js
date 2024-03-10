@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Octokit } from "octokit";
 import SignInButton from "../sign-in-button/sign-in-button";
 
-const SignInButtons = () => {
+const SignInButtons = ({ setAuthToken, authToken, setPrs }) => {
   useEffect(() => {
     window.ghLogin.receive((event, args) => {
       ghCallback(args);
@@ -29,8 +29,10 @@ const SignInButtons = () => {
           },
         }
       );
-      console.log(response);
+      const currentPrs = [].concat(response.data.items);
+      setPrs(currentPrs);
     }
+    setAuthToken(access_token);
   };
   const ghClickHandler = () => {
     window.ghLogin.send();
