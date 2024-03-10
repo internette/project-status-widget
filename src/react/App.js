@@ -1,5 +1,5 @@
 import "./App.css";
-import SignInButtons from "./components/sign-in-buttons/sign-in-buttons.js";
+import SignInButtons from "./components/sign-in-buttons/sign-in-buttons";
 
 function App() {
   return (
