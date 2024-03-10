@@ -43,9 +43,11 @@ const SignInButtons = ({ setAuthToken, setPrs }) => {
   };
 
   useEffect(() => {
-    window.ghLogin.receive((event, args) => {
-      ghCallback(args);
-    });
+    if (window && window.ghLogin) {
+      window.ghLogin.receive((event, args) => {
+        ghCallback(args);
+      });
+    }
   }, [ghCallback]);
 
   const signinTypes = [
