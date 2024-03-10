@@ -1,10 +1,10 @@
 import "./App.css";
-import AllSignInButtons from "./components/sign-in-buttons/sign-in-buttons";
+import SignInButtons from "./components/sign-in-buttons/sign-in-buttons.js";
 
 function App() {
   return (
     <div className="App">
-      <AllSignInButtons />
+      <SignInButtons />
     </div>
   );
 }
