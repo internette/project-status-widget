@@ -321,6 +321,7 @@ module.exports = function (webpackEnv) {
         }),
         ...(modules.webpackAliases || {}),
         "@psw/components": paths.appComponents,
+        "@psw/assets": paths.appAssets,
         "@psw/electron": paths.electronSrc,
       },
       plugins: [
