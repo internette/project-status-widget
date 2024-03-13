@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
-import SignInButtons from "./components/sign-in-buttons/sign-in-buttons";
-import PrList from "./components/pr-list/pr-list";
+import SignInButtons from "@psw/components/sign-in-buttons/sign-in-buttons";
+import PrList from "@psw/components/pr-list/pr-list";
 
 function App() {
   const [authToken, setAuthToken] = useState("");

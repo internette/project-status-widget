@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { Octokit } from "octokit";
-import SignInButton from "../sign-in-button/sign-in-button";
+import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
 const SignInButtons = ({ setAuthToken, setPrs }) => {
   const ghCallback = useCallback(

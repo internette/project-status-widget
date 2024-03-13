@@ -1,4 +1,4 @@
-import PrLineItem from "../pr-item/pr-item";
+import PrLineItem from "@psw/components/pr-item/pr-item";
 import cs from "classnames";
 import styles from "./pr-list.module.scss";
 
