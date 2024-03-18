@@ -1,13 +1,16 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useContext } from "react";
 import { Octokit } from "octokit";
+import { OctokitContext } from "../../contexts/octokit";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
-const SignInButtons = ({ setAuthToken, setPrs }) => {
+const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
+  const [octokitContext, setOctokitContext] = useContext(OctokitContext);
   const ghCallback = useCallback(
     async ({ access_token }) => {
       const octokit = new Octokit({
         auth: access_token,
       });
+      setOctokitContext(octokit);
       const userResp = await octokit.request("GET /user", {
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
@@ -28,23 +31,26 @@ const SignInButtons = ({ setAuthToken, setPrs }) => {
         const prsWithRepoInfo = response.data.items;
         await prsWithRepoInfo.map((pr) => {
           const prDetails = pr;
-          let repoName = prDetails.repository_url.replace(".git", "");
-          repoName = repoName.substring(
-            repoName.lastIndexOf("/") + 1,
-            repoName.length
+          let repo = prDetails.repository_url.replace(".git", "");
+          repo = repo.split("/repos/")[1];
+          const repoName = repo.substring(
+            repo.lastIndexOf("/") + 1,
+            repo.length
           );
+          const repoOwner = repo.substring(0, repo.indexOf("/"));
           prDetails["repository"] = {
             url: prDetails.repository_url,
             name: repoName,
+            owner: repoOwner,
           };
           return prDetails;
         });
-        const currentPrs = response.data.items;
+        const currentPrs = prsWithRepoInfo;
         setPrs(currentPrs);
       }
       setAuthToken(access_token);
     },
-    [setAuthToken, setPrs]
+    [setAuthToken, setPrs, setOctokitContext]
   );
   const ghClickHandler = () => {
     window.ghLogin.send();
@@ -57,12 +63,12 @@ const SignInButtons = ({ setAuthToken, setPrs }) => {
   };
 
   useEffect(() => {
-    if (window && window.ghLogin) {
+    if (window && window.ghLogin && authToken.length <= 0) {
       window.ghLogin.receive((event, args) => {
         ghCallback(args);
       });
     }
-  }, [ghCallback]);
+  }, [ghCallback, authToken]);
 
   const signinTypes = [
     {

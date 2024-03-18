@@ -7,7 +7,16 @@ const PrList = ({ prs }) => {
     <div>
       <ul className={cs(styles.prList)}>
         {prs.map((pr) => {
-          const { title, html_url, state, draft, user, id, repository } = pr;
+          const {
+            title,
+            html_url,
+            state,
+            draft,
+            user,
+            id,
+            number,
+            repository,
+          } = pr;
           const provider =
             html_url.indexOf("github") >= 0 ? "github" : "gitlab";
           const prOwner = {
@@ -19,6 +28,7 @@ const PrList = ({ prs }) => {
             prName: title,
             isDraft: draft,
             owner: prOwner,
+            prNumber: number,
             repository,
             provider,
             state,

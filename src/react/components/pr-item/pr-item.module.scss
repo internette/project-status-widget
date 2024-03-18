@@ -59,6 +59,16 @@
 .listIcon {
     margin-right: 0.3rem;
     width: 1rem;
+    color: gray;
+    &.blocked {
+        color: red;
+    }
+    &.merge {
+        color: green;
+    }
+    &.unstable {
+        color: goldenrod;
+    }
 }
 
 .draft {
