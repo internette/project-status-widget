@@ -1,0 +1,75 @@
+.lineItem {
+    text-align: left;
+    border-bottom: 1px solid silver;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    &:hover {
+        background-color: lightgray;
+    }
+    a {
+        text-decoration: none;
+    }
+}
+
+.prInfo {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    padding: 0.3rem;
+}
+
+.iconLevelUp {
+    transform: rotate(90deg);
+    color: gray;
+    font-size: 0.5rem;
+    margin-right: 0.25rem;
+}
+
+.repoNameContainer {
+    font-size: 0.7rem;
+    color: black;
+    margin-left: 1.3rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0;
+}
+
+.prLinkContainer {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+    margin: 0;
+}
+
+.prLink, .repoNameLink {
+    color: black;
+}
+
+.prLink {
+    font-size: 0.95rem;
+}
+
+.repoNameLink {
+    font-weight: 600;
+}
+
+.listIcon {
+    margin-right: 0.3rem;
+    width: 1rem;
+}
+
+.draft {
+    color: gray;
+}
+
+.prOwner {
+    font-size: 0.8rem;
+    color: black;
+    font-weight: bold;
+    margin-right: 0.3rem;
+    margin-left: 0.3rem;
+    flex: 1;
+}

@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { Octokit } from "octokit";
-import SignInButton from "../sign-in-button/sign-in-button";
+import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
 const SignInButtons = ({ setAuthToken, setPrs }) => {
   const ghCallback = useCallback(
@@ -25,7 +25,21 @@ const SignInButtons = ({ setAuthToken, setPrs }) => {
             },
           }
         );
-        const currentPrs = [].concat(response.data.items);
+        const prsWithRepoInfo = response.data.items;
+        await prsWithRepoInfo.map((pr) => {
+          const prDetails = pr;
+          let repoName = prDetails.repository_url.replace(".git", "");
+          repoName = repoName.substring(
+            repoName.lastIndexOf("/") + 1,
+            repoName.length
+          );
+          prDetails["repository"] = {
+            url: prDetails.repository_url,
+            name: repoName,
+          };
+          return prDetails;
+        });
+        const currentPrs = response.data.items;
         setPrs(currentPrs);
       }
       setAuthToken(access_token);
@@ -43,9 +57,11 @@ const SignInButtons = ({ setAuthToken, setPrs }) => {
   };
 
   useEffect(() => {
-    window.ghLogin.receive((event, args) => {
-      ghCallback(args);
-    });
+    if (window && window.ghLogin) {
+      window.ghLogin.receive((event, args) => {
+        ghCallback(args);
+      });
+    }
   }, [ghCallback]);
 
   const signinTypes = [
