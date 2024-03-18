@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useContext } from "react";
 import { Octokit } from "octokit";
-import { OctokitContext } from "../../contexts/octokit";
+import { OctokitContext } from "@psw/contexts/github";
+import { getPrs } from "@psw/utils/github";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
 const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
@@ -10,42 +11,15 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
       const octokit = new Octokit({
         auth: access_token,
       });
-      setOctokitContext(octokit);
       const userResp = await octokit.request("GET /user", {
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
         },
       });
       const username = await userResp.data.login;
+      setOctokitContext({ context: octokit, username });
       if (username) {
-        const searchQueryParams = `is:open is:pr involves:${username}`;
-        const searchQuery = "?q=" + encodeURIComponent(searchQueryParams);
-        const response = await octokit.request(
-          "GET /search/issues" + searchQuery,
-          {
-            headers: {
-              "X-GitHub-Api-Version": "2022-11-28",
-            },
-          }
-        );
-        const prsWithRepoInfo = response.data.items;
-        await prsWithRepoInfo.map((pr) => {
-          const prDetails = pr;
-          let repo = prDetails.repository_url.replace(".git", "");
-          repo = repo.split("/repos/")[1];
-          const repoName = repo.substring(
-            repo.lastIndexOf("/") + 1,
-            repo.length
-          );
-          const repoOwner = repo.substring(0, repo.indexOf("/"));
-          prDetails["repository"] = {
-            url: prDetails.repository_url,
-            name: repoName,
-            owner: repoOwner,
-          };
-          return prDetails;
-        });
-        const currentPrs = prsWithRepoInfo;
+        const currentPrs = await getPrs({ octokit, username });
         setPrs({ github: currentPrs });
       }
       setAuthToken(access_token);
