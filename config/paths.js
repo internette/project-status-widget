@@ -61,6 +61,7 @@ module.exports = {
   appPackageJson: resolveApp("package.json"),
   appSrc: resolveApp("src"),
   appComponents: resolveApp("src/react/components"),
+  appContexts: resolveApp("src/react/contexts"),
   appAssets: resolveApp("src/react/assets"),
   appTsConfig: resolveApp("tsconfig.json"),
   appJsConfig: resolveApp("jsconfig.json"),

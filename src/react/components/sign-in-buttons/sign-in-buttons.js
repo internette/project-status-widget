@@ -1,13 +1,16 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useContext } from "react";
 import { Octokit } from "octokit";
+import { OctokitContext } from "../../contexts/octokit";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
-const SignInButtons = ({ setAuthToken, setPrs }) => {
+const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
+  const [octokitContext, setOctokitContext] = useContext(OctokitContext);
   const ghCallback = useCallback(
     async ({ access_token }) => {
       const octokit = new Octokit({
         auth: access_token,
       });
+      setOctokitContext(octokit);
       const userResp = await octokit.request("GET /user", {
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
@@ -57,12 +60,12 @@ const SignInButtons = ({ setAuthToken, setPrs }) => {
   };
 
   useEffect(() => {
-    if (window && window.ghLogin) {
+    if (window && window.ghLogin && authToken.length <= 0) {
       window.ghLogin.receive((event, args) => {
         ghCallback(args);
       });
     }
-  }, [ghCallback]);
+  }, [ghCallback, authToken]);
 
   const signinTypes = [
     {
