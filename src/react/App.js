@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { OctokitContext } from "./contexts/octokit";
 import SignInButtons from "@psw/components/sign-in-buttons/sign-in-buttons";
-import PrList from "@psw/components/pr-list/pr-list";
+import AllPrsList from "./components/all-prs-list/all-prs-list";
 
 function App() {
   const [authToken, setAuthToken] = useState("");
@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <OctokitContext.Provider value={[octokitContext, setOctokitContext]}>
         {authToken.length > 0 ? (
-          <PrList prs={prs} />
+          <AllPrsList prs={prs} />
         ) : (
           <SignInButtons
             setAuthToken={setAuthToken}
