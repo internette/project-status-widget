@@ -66,6 +66,9 @@
     &.merge {
         color: green;
     }
+    &.unstable {
+        color: goldenrod;
+    }
 }
 
 .draft {

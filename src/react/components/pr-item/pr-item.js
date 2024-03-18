@@ -57,8 +57,10 @@ const PrLineItem = ({ prDetails }) => {
                 className={cs("fa-solid", styles.listIcon, {
                   "fa-check": mergeableState === "clean",
                   [styles.merge]: mergeableState === "clean",
-                  [styles.blocked]: mergeableState === "blocked",
                   "fa-times": mergeableState === "blocked",
+                  [styles.blocked]: mergeableState === "blocked",
+                  "fa-rotate-right fa-spin": mergeableState === "unstable",
+                  [styles.unstable]: mergeableState === "unstable",
                   "fa-exclamation-triangle": mergeableState === "dirty",
                 })}
               ></i>
