@@ -42,7 +42,7 @@ const AllPrsList = ({ prs, setPrs }) => {
       }
     });
   }, [],
-  { interval: 60000 });
+  { interval: 300000 });
   return providers.map((provider) => {
     const providerNameLowercase = provider.name.toLowerCase();
     const hasPrs =
