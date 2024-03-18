@@ -59,6 +59,7 @@ const AllPrsList = ({ prs }) => {
                 No PRs available. Try creating one at{" "}
                 <a
                   href={provider.prHref || provider.baseHref}
+                  rel="noreferrer"
                   target="_blank"
                   className={cs(
                     styles.noPrsLink,
