@@ -25,7 +25,21 @@ const SignInButtons = ({ setAuthToken, setPrs }) => {
             },
           }
         );
-        const currentPrs = [].concat(response.data.items);
+        const prsWithRepoInfo = response.data.items;
+        await prsWithRepoInfo.map((pr) => {
+          const prDetails = pr;
+          let repoName = prDetails.repository_url.replace(".git", "");
+          repoName = repoName.substring(
+            repoName.lastIndexOf("/") + 1,
+            repoName.length
+          );
+          prDetails["repository"] = {
+            url: prDetails.repository_url,
+            name: repoName,
+          };
+          return prDetails;
+        });
+        const currentPrs = response.data.items;
         setPrs(currentPrs);
       }
       setAuthToken(access_token);
