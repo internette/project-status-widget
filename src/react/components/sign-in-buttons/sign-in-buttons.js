@@ -50,7 +50,7 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
       }
       setAuthToken(access_token);
     },
-    [setAuthToken, setPrs]
+    [setAuthToken, setPrs, setOctokitContext]
   );
   const ghClickHandler = () => {
     window.ghLogin.send();

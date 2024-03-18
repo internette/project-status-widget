@@ -14,7 +14,7 @@ const PrLineItem = ({ prDetails }) => {
     owner,
     repository,
   } = prDetails;
-  const [octokitContext, setOctokitContext] = useContext(OctokitContext);
+  const [octokitContext] = useContext(OctokitContext);
   const [mergeableState, setMergeableState] = useState("");
   const [prId, setPrId] = useState();
   useEffect(() => {
@@ -37,7 +37,15 @@ const PrLineItem = ({ prDetails }) => {
         setPrId(prData.id);
       };
     }
-  }, [repository, owner, prNumber, setMergeableState, setPrId, mergeableState]);
+  }, [
+    repository,
+    owner,
+    prNumber,
+    setMergeableState,
+    setPrId,
+    mergeableState,
+    octokitContext,
+  ]);
 
   return (
     <li
