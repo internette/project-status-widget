@@ -46,7 +46,7 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
           return prDetails;
         });
         const currentPrs = prsWithRepoInfo;
-        setPrs(currentPrs);
+        setPrs({ github: currentPrs });
       }
       setAuthToken(access_token);
     },
