@@ -3,16 +3,18 @@ import cs from "classnames";
 import styles from "./pr-list.module.scss";
 
 const PrList = ({ prs }) => {
+  console.log(prs);
   return (
     <div>
       <ul className={cs(styles.prList)}>
         {prs.map((pr) => {
-          const { title, html_url, state } = pr;
+          const { title, html_url, state, draft } = pr;
           const provider =
             html_url.indexOf("github") >= 0 ? "github" : "gitlab";
           const prDetails = {
             linkAddress: html_url,
             prName: title,
+            isDraft: draft,
             provider,
             state,
           };
