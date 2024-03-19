@@ -35,13 +35,13 @@ const AllPrsList = ({ prs, setPrs }) => {
             return newPr;
           } else {
             const currPr = prsByProvider.filter(oldPr => { return oldPr.id === newPr.id})[0];
-            return new Object({}, ...currPr, ...newPr);
+            return {...currPr, ...newPr};
           }
         });
         return await setPrs({[providerName]: updatedPrs});
       }
     });
-  }, [],
+  },
   { interval: 300000 });
   return providers.map((provider) => {
     const providerNameLowercase = provider.name.toLowerCase();

@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 
 export function usePollingEffect(
   asyncCallback,
-  dependencies = [],
   {
     interval = 10_000, // 10 seconds
     onCleanUp = () => {},
@@ -27,5 +26,5 @@ export function usePollingEffect(
       clearTimeout(timeoutIdRef.current);
       onCleanUp();
     };
-  }, [...dependencies, interval]);
+  }, [asyncCallback, onCleanUp, interval]);
 }
