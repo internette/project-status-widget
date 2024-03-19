@@ -18,9 +18,14 @@ export const getAdditionalPrDetails = async ({ octokit, prNumber, repository }) 
     }
 };
 
-export const getNotifications = async ({ octokit }) => {
-    const notifications = await octokit.rest.activity.listNotificationsForAuthenticatedUser();
-    console.log(notifications);
+export const getPrNotifications = async ({ octokit, prNumber, repository }) => {
+    const allNotifications = await octokit.paginate(octokit.rest.activity.listNotificationsForAuthenticatedUser).then(notifications => notifications);
+    const notificationsForPr = allNotifications.filter(notification => {
+        const matchesPr = notification.subject.url.indexOf(`${repository.owner}/${repository.name}/pulls/${prNumber}`) >= 0;
+        const isUnread = notification.unread;
+        return matchesPr && isUnread;
+    });
+    return notificationsForPr;
 }
 
 export const getPrs = async ({ username, octokit, isUpdate = false })=> {
@@ -51,7 +56,8 @@ export const getPrs = async ({ username, octokit, isUpdate = false })=> {
             owner: repoOwner,
         };
         if(isUpdate){
-            const notifications = await getNotifications({ octokit });
+            const notifications = await getPrNotifications({ octokit, prNumber: pr.number, repository: prDetails.repository });
+            prDetails["nofitications"] = notifications;
         } else {
             prDetails["notifications"] = [];
         }
