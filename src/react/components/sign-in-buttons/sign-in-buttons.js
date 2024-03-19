@@ -3,6 +3,8 @@ import { Octokit } from "octokit";
 import { OctokitContext } from "@psw/contexts/github";
 import { getPrs } from "@psw/utils/github";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
+import cs from "classnames";
+import styles from "./sign-in-buttons.module.scss";
 
 const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
   const [octokitContext, setOctokitContext] = useContext(OctokitContext);
@@ -47,19 +49,23 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
   const signinTypes = [
     {
       provider: "github",
+      displayName: "Github",
       callback: ghCallback,
       onclickHandler: ghClickHandler,
     },
     {
       provider: "gitlab",
+      displayName: "Gitlab",
       callback: glCallback,
       onclickHandler: glClickHandler,
     },
   ];
   return (
-    <div>
+    <div className={cs(styles.buttonsContainer)}>
       {signinTypes.map((signinType) => (
-        <SignInButton signinType={signinType} />
+        <p className={cs(styles.buttonContainer)}>
+          <SignInButton signinType={signinType} />
+        </p>
       ))}
     </div>
   );

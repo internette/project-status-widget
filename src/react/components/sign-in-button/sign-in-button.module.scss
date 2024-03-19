@@ -1,0 +1,41 @@
+.buttonReset {
+    border: 0;
+    background-image: none;
+}
+
+.buttonBase {
+    padding: 0.7rem;
+    max-width: 12rem;
+    width: 100%;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    &:hover {
+        cursor: pointer;
+    }
+    &:not(:last-child){
+        margin-bottom: 0.5rem;
+    }
+}
+
+.buttonProviderIcon {
+    font-size: 0.9rem;
+    margin-right: 0.15rem;
+}
+.buttonProviderName {
+    font-weight: 600;
+}
+
+.buttonGithub {
+    background-color: orchid;
+    &:hover {
+        background-color: darkorchid;
+    }
+}
+
+.buttonGitlab {
+    background-color: orange;
+    &:hover {
+        background-color: orangered;
+    }
+}
+
