@@ -320,9 +320,12 @@ module.exports = function (webpackEnv) {
           "scheduler/tracing": "scheduler/tracing-profiling",
         }),
         ...(modules.webpackAliases || {}),
-        "@psw/components": paths.appComponents,
         "@psw/assets": paths.appAssets,
         "@psw/electron": paths.electronSrc,
+        "@psw/components": paths.appComponents,
+        "@psw/contexts": paths.appContexts,
+        "@psw/hooks": paths.appHooks,
+        "@psw/utils": paths.appUtils,
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).

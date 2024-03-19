@@ -6,7 +6,7 @@ const PrList = ({ prs, provider }) => {
   return (
     <ul className={cs(styles.prList)}>
       {prs.map((pr) => {
-        const { title, html_url, state, draft, user, id, number, repository } =
+        const { title, html_url, state, draft, user, id, number, repository, mergeableState } =
           pr;
         const prOwner = {
           name: user?.login || "",
@@ -18,10 +18,11 @@ const PrList = ({ prs, provider }) => {
           isDraft: draft,
           owner: prOwner,
           prNumber: number,
+          prId: id,
           repository,
           provider,
           state,
-          id,
+          mergeableState,
         };
         return <PrLineItem prDetails={prDetails} key={`pr-${id}`} />;
       })}
