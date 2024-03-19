@@ -28,7 +28,7 @@ const AllPrsList = ({ prs, setPrs }) => {
     return await providers.map(async (provider) => {
       const providerName = provider.name.toLowerCase();
       if(providerName === 'github'){
-        const fetchedPrs = await getPrs({ username: githubDataObject.username, octokit: githubDataObject.context});
+        const fetchedPrs = await getPrs({ username: githubDataObject.username, octokit: githubDataObject.context, isUpdate: true});
         const prsByProvider = prs[providerName];
         const updatedPrs = fetchedPrs.map(newPr => {
           if(prsByProvider.filter(oldPr => { return oldPr.id !== newPr.id})){

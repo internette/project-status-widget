@@ -18,7 +18,12 @@ export const getAdditionalPrDetails = async ({ octokit, prNumber, repository }) 
     }
 };
 
-export const getPrs = async ({ username, octokit })=> {
+export const getNotifications = async ({ octokit }) => {
+    const notifications = await octokit.rest.activity.listNotificationsForAuthenticatedUser();
+    console.log(notifications);
+}
+
+export const getPrs = async ({ username, octokit, isUpdate = false })=> {
     const searchQueryParams = `is:open is:pr involves:${username}`;
     const searchQuery = "?q=" + encodeURIComponent(searchQueryParams);
     const fullSearch = "GET /search/issues" + searchQuery;
@@ -45,6 +50,11 @@ export const getPrs = async ({ username, octokit })=> {
             name: repoName,
             owner: repoOwner,
         };
+        if(isUpdate){
+            const notifications = await getNotifications({ octokit });
+        } else {
+            prDetails["notifications"] = [];
+        }
         const additionalPrDetails = await getAdditionalPrDetails({ octokit, prNumber: pr.number, repository: prDetails.repository });
         prDetails['mergeableState'] = additionalPrDetails.mergeableState;
         prDetails['prId'] = additionalPrDetails.prId;
