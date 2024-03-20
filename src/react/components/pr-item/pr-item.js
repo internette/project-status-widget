@@ -1,7 +1,8 @@
 import cs from "classnames";
 import styles from "./pr-item.module.scss";
+import NotificationsList from "../notifications-list/notifications-list";
 
-const PrLineItem = ({ prDetails }) => {
+const PrLineItem = ({ prDetails, index }) => {
   const {
     provider,
     linkAddress,
@@ -11,8 +12,46 @@ const PrLineItem = ({ prDetails }) => {
     owner,
     repository,
     mergeableState,
-    prId
+    prId,
+    notifications,
+    prNumber
   } = prDetails;
+  // const showNotifications = notifications && notifications.length > 0;
+  const showNotifications = index === 2 && true;
+  const mockNotifications = [{
+    id: "12345",
+    last_read_at: new Date(),
+    reason: "review_requested",
+    subject: {
+      latest_comment_url: "",
+      title: "Test Review Requested",
+      type: "PullRequest",
+      url: `https://api.github.com/repos/${repository.owner}/${repository.name}/pulls/${prNumber}`
+    },
+    unread: true
+  }, {
+    id: "12345",
+    last_read_at: new Date(),
+    reason: "mentioned",
+    subject: {
+      latest_comment_url: "",
+      title: "Test Review Requested",
+      type: "PullRequest",
+      url: `https://api.github.com/repos/${repository.owner}/${repository.name}/pulls/${prNumber}`
+    },
+    unread: true
+  }, {
+    id: "12345",
+    last_read_at: new Date(),
+    reason: "state_change",
+    subject: {
+      latest_comment_url: "",
+      title: "Test Review Requested",
+      type: "PullRequest",
+      url: `https://api.github.com/repos/${repository.owner}/${repository.name}/pulls/${prNumber}`
+    },
+    unread: true
+  }]
 
   return (
     <li
@@ -55,6 +94,7 @@ const PrLineItem = ({ prDetails }) => {
           </a>
         </p>
       </div>
+      {showNotifications && <NotificationsList notifications={mockNotifications}/>}
       <a href={owner.url} className={cs(styles.prOwner)}>
         {owner.name}
       </a>
