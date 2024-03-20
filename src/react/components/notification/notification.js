@@ -1,7 +1,7 @@
 import cs from "classnames";
 import styles from "./notification.module.scss";
 
-const Notification = ({ notificationDetails, isOnlyNotification }) => {
+const Notification = ({ notificationDetails, isOnlyNotification, index }) => {
     const notificationMap = {
         "review_requested": {
             displayName: "Review Requested"
@@ -19,8 +19,10 @@ const Notification = ({ notificationDetails, isOnlyNotification }) => {
             displayName: "Team Mention"
         }
     }
+    const isFirst = index === 0 && !isOnlyNotification;
     return <p className={cs(styles.notification, styles[notificationDetails.reason], {
-        [styles.multipleNotifications]: !isOnlyNotification
+        [styles.multipleNotifications]: !isOnlyNotification,
+        [styles.active]: isFirst
     })}>{notificationMap[notificationDetails.reason].displayName}</p>
 }
 

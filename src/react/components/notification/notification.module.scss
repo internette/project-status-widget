@@ -1,10 +1,28 @@
+@keyframes slideFadeIn {
+    from {
+        transform: translateY(-40%);
+        opacity: 0;
+      }
+    
+      to {
+        transform: translateY(-50%);
+        opacity: 1;
+      }
+}
 .notification {
     font-size: 0.75rem;
     text-align: right;
     padding: 0;
     margin: 0;
     width: 100%;
-    height: 3rem;
-    display: flex;
-    align-items: center;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    opacity: 0;
+}
+
+.notification.active {
+    animation-name: slideFadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
 }
