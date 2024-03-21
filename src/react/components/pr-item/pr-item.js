@@ -13,45 +13,9 @@ const PrLineItem = ({ prDetails, index }) => {
     repository,
     mergeableState,
     prId,
-    notifications,
-    prNumber
+    notifications
   } = prDetails;
-  // const showNotifications = notifications && notifications.length > 0;
-  const showNotifications = index === 2 && true;
-  const mockNotifications = [{
-    id: "12345",
-    last_read_at: new Date(),
-    reason: "review_requested",
-    subject: {
-      latest_comment_url: "",
-      title: "Test Review Requested",
-      type: "PullRequest",
-      url: `https://api.github.com/repos/${repository.owner}/${repository.name}/pulls/${prNumber}`
-    },
-    unread: true
-  }, {
-    id: "12345",
-    last_read_at: new Date(),
-    reason: "mentioned",
-    subject: {
-      latest_comment_url: "",
-      title: "Test Review Requested",
-      type: "PullRequest",
-      url: `https://api.github.com/repos/${repository.owner}/${repository.name}/pulls/${prNumber}`
-    },
-    unread: true
-  }, {
-    id: "12345",
-    last_read_at: new Date(),
-    reason: "state_change",
-    subject: {
-      latest_comment_url: "",
-      title: "Test Review Requested",
-      type: "PullRequest",
-      url: `https://api.github.com/repos/${repository.owner}/${repository.name}/pulls/${prNumber}`
-    },
-    unread: true
-  }]
+  const showNotifications = notifications && notifications.length > 0;
 
   return (
     <li
@@ -94,7 +58,7 @@ const PrLineItem = ({ prDetails, index }) => {
           </a>
         </p>
       </div>
-      {showNotifications && <NotificationsList notifications={mockNotifications}/>}
+      {showNotifications && <NotificationsList notifications={notifications}/>}
       <a href={owner.url} className={cs(styles.prOwner)}>
         {owner.name}
       </a>

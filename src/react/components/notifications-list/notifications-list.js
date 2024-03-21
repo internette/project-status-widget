@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import cs from "classnames";
 import Notification from "@psw/components/notification/notification";
 import styles from "./notifications-list.module.scss";
@@ -6,46 +6,25 @@ import styles from "./notifications-list.module.scss";
 const NotificationsList = ({ notifications }) => {
   const isOnlyNotification = notifications.length === 1;
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentNotification, setCurrentNotification] = useState(
-    notifications[currentIndex]
-  );
-
+  const notificationRef = useRef(notifications[0]);
   useEffect(() => {
     if (!isOnlyNotification) {
-      const setNextNotification = setTimeout(() => {
-        const nextIndex = currentIndex + 1;
-        setCurrentIndex(nextIndex);
-        setCurrentNotification(notifications[nextIndex]);
-      }, 2000);
-      return () => clearTimeout(setNextNotification);
+        const setNextIndex = setTimeout(()=> {
+            const nextIndex = currentIndex === notifications.length -1 ? 0 : currentIndex + 1;
+            setCurrentIndex(nextIndex);
+            notificationRef.current = notifications[nextIndex];
+        }, 2000);
+        return ()=> clearTimeout(setNextIndex);
     }
-  }, []);
-
-  useEffect(() => {
-    if (currentIndex === notifications.length - 1) {
-      setTimeout(() => {
-        setCurrentIndex(0);
-        setCurrentNotification(notifications[0]);
-      }, 2000);
-    }
-  }, [currentIndex]);
+  }, [currentIndex, isOnlyNotification, notifications]);
 
   return (
     <div className={cs(styles.notificationsListContainer)}>
       <div className={cs(styles.notificationsList)}>
         <Notification
-          notificationDetails={currentNotification}
+          notificationDetails={notificationRef.current}
           isOnlyNotification={isOnlyNotification}
         />
-        {/* {notifications.map((notification, index) => {
-          return (
-            <Notification
-              notificationDetails={notification}
-              isOnlyNotification={isOnlyNotification}
-              index={index}
-            />
-          );
-        })} */}
       </div>
     </div>
   );
