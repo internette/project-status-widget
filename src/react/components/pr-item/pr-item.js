@@ -21,7 +21,7 @@ const PrLineItem = ({ prDetails }) => {
 
   useEffect(()=> {
     meetsMinWidthRef.current = document.body.clientWidth > 400;
-    showNotificationsRef.current = notifications && notifications.length > 0 && meetsMinWidth.current;
+    showNotificationsRef.current = notifications && notifications.length > 0 && meetsMinWidthRef.current;
   }, [document.body.clientWidth, notifications, notifications?.length])
 
   return (
