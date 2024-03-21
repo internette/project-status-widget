@@ -2,7 +2,7 @@ import cs from "classnames";
 import styles from "./pr-item.module.scss";
 import NotificationsList from "../notifications-list/notifications-list";
 
-const PrLineItem = ({ prDetails, index }) => {
+const PrLineItem = ({ prDetails }) => {
   const {
     provider,
     linkAddress,
