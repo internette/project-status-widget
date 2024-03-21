@@ -1,6 +1,7 @@
 import cs from "classnames";
 import styles from "./pr-item.module.scss";
 import NotificationsList from "../notifications-list/notifications-list";
+import { useEffect, useRef } from "react";
 
 const PrLineItem = ({ prDetails }) => {
   const {
@@ -15,7 +16,13 @@ const PrLineItem = ({ prDetails }) => {
     prId,
     notifications
   } = prDetails;
-  const showNotifications = notifications && notifications.length > 0;
+  let meetsMinWidth = document.body.clientWidth > 400;
+  let showNotificationsRef = useRef(notifications && notifications.length > 0 && meetsMinWidth);
+
+  useEffect(()=> {
+    meetsMinWidth = document.body.clientWidth > 400;
+    showNotificationsRef.current = notifications && notifications.length > 0 && meetsMinWidth;
+  }, [document.body.clientWidth, notifications, notifications?.length])
 
   return (
     <li
@@ -58,7 +65,7 @@ const PrLineItem = ({ prDetails }) => {
           </a>
         </p>
       </div>
-      {showNotifications && <NotificationsList notifications={notifications}/>}
+      {showNotificationsRef.current && <NotificationsList notifications={notifications}/>}
       <a href={owner.url} className={cs(styles.prOwner)}>
         {owner.name}
       </a>
