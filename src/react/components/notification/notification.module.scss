@@ -1,13 +1,21 @@
 @keyframes slideFadeIn {
-    from {
-        transform: translateY(-40%);
-        opacity: 0;
-      }
-    
-      to {
-        transform: translateY(-50%);
-        opacity: 1;
-      }
+  0% {
+    transform: translateY(-40%);
+    opacity: 0;
+  }
+
+  20% {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-60%);
+    opacity: 0;
+  }
 }
 .notification {
     font-size: 0.75rem;
@@ -19,10 +27,7 @@
     top: 50%;
     transform: translate(0, -50%);
     opacity: 0;
-}
-
-.notification.active {
     animation-name: slideFadeIn;
-    animation-duration: 1s;
+    animation-duration: 2s;
     animation-fill-mode: forwards;
 }
