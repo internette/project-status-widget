@@ -8,5 +8,5 @@ contextBridge.exposeInMainWorld("ghLogin", {
     ipcRenderer.on("set-gh-access-token", (event, args) =>
       callback(event, args)
     );
-  },
+  }
 });

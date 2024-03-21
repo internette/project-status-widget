@@ -6,11 +6,20 @@ const PrList = ({ prs, provider }) => {
   return (
     <ul className={cs(styles.prList)}>
       {prs.map((pr, index) => {
-        const { title, html_url, state, draft, user, id, number, repository, mergeableState } =
-          pr;
+        const {
+          title,
+          html_url,
+          state,
+          draft,
+          user,
+          id,
+          number,
+          repository,
+          mergeableState
+        } = pr;
         const prOwner = {
           name: user?.login || "",
-          url: user?.html_url || "",
+          url: user?.html_url || ""
         };
         const prDetails = {
           linkAddress: html_url,
@@ -22,9 +31,11 @@ const PrList = ({ prs, provider }) => {
           repository,
           provider,
           state,
-          mergeableState,
+          mergeableState
         };
-        return <PrLineItem prDetails={prDetails} index={index} key={`pr-${id}`} />;
+        return (
+          <PrLineItem prDetails={prDetails} index={index} key={`pr-${id}`} />
+        );
       })}
     </ul>
   );

@@ -1,78 +1,78 @@
 .providerSection {
-    position: relative;
+  position: relative;
 }
 
 .labelCheckbox {
-    display: none;
-    &:checked + .providerLabel {
-        .collapseIcon {
-            transform: rotate(0);
-        }
-        & + .providerContent{
-            max-height: 20rem;
-        }
+  display: none;
+  &:checked + .providerLabel {
+    .collapseIcon {
+      transform: rotate(0);
     }
+    & + .providerContent {
+      max-height: 20rem;
+    }
+  }
 }
 
 .providerLabel {
-    padding: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
 }
 
 .providerName {
-    width: 100%;
+  width: 100%;
 }
 
 .collapseIcon {
-    transform: rotate(-90deg);
-    transition: all 0.3ms;
-    flex: 1;
-    font-size: 0.8rem;
+  transform: rotate(-90deg);
+  transition: all 0.3ms;
+  flex: 1;
+  font-size: 0.8rem;
 }
 
 .providerIcon {
-    margin-right: 0.3rem;
+  margin-right: 0.3rem;
 }
 
 .githubLabel {
-    background-color: orchid;
-    transition: all 150ms;
-    &:hover {
-        background-color: darkorchid;
-    }
+  background-color: orchid;
+  transition: all 150ms;
+  &:hover {
+    background-color: darkorchid;
+  }
 }
 
 .providerContent {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s;
-    background-color: white;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s;
+  background-color: white;
 }
 
 .noPrsLink {
-    color: black;
-    font-weight: 700;
-    text-decoration: none;
-    border-bottom: 1px solid black;
-    transition: all 100ms;
-    &.gitlabLink {
-        border-bottom-color: orange;
-        &:hover {
-            border-bottom-color: orangered;
-        }
-    }
-    &.githubLink {
-        border-bottom-color: orchid;
-        &:hover {
-            border-bottom-color: darkorchid;
-        }
-    }
+  color: black;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid black;
+  transition: all 100ms;
+  &.gitlabLink {
+    border-bottom-color: orange;
     &:hover {
-        border-bottom-width: 2px;
+      border-bottom-color: orangered;
     }
+  }
+  &.githubLink {
+    border-bottom-color: orchid;
+    &:hover {
+      border-bottom-color: darkorchid;
+    }
+  }
+  &:hover {
+    border-bottom-width: 2px;
+  }
 }

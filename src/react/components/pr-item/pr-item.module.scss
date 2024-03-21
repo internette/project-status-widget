@@ -1,90 +1,91 @@
 .lineItem {
-    text-align: left;
-    border-bottom: 1px solid silver;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    width: 100%;
-    align-items: center;
-    height: 3rem;
-    overflow: hidden;
-    position: relative;
-    container-type: size;
-    &:hover {
-        background-color: lightgray;
-    }
-    a {
-        text-decoration: none;
-        -webkit-app-region: no-drag;
-    }
+  text-align: left;
+  border-bottom: 1px solid silver;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  height: 3rem;
+  overflow: hidden;
+  position: relative;
+  container-type: size;
+  &:hover {
+    background-color: lightgray;
+  }
+  a {
+    text-decoration: none;
+    -webkit-app-region: no-drag;
+  }
 }
 
 .prInfo {
-    white-space: nowrap;
-    overflow: hidden;
-    width: 100%;
-    padding: 0.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  padding: 0.3rem;
 }
 
 .iconLevelUp {
-    transform: rotate(90deg);
-    color: gray;
-    font-size: 0.5rem;
-    margin-right: 0.25rem;
+  transform: rotate(90deg);
+  color: gray;
+  font-size: 0.5rem;
+  margin-right: 0.25rem;
 }
 
 .repoNameContainer {
-    font-size: 0.7rem;
-    color: black;
-    margin-left: 1.3rem;
-    margin-top: 0.1rem;
-    margin-bottom: 0;
+  font-size: 0.7rem;
+  color: black;
+  margin-left: 1.3rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0;
 }
 
 .prLinkContainer {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-    margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 0;
 }
 
-.prLink, .repoNameLink {
-    color: black;
+.prLink,
+.repoNameLink {
+  color: black;
 }
 
 .prLink {
-    font-size: 0.95rem;
+  font-size: 0.95rem;
 }
 
 .repoNameLink {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .listIcon {
-    margin-right: 0.3rem;
-    width: 1rem;
-    color: gray;
-    &.blocked {
-        color: red;
-    }
-    &.merge {
-        color: green;
-    }
-    &.unstable {
-        color: goldenrod;
-    }
+  margin-right: 0.3rem;
+  width: 1rem;
+  color: gray;
+  &.blocked {
+    color: red;
+  }
+  &.merge {
+    color: green;
+  }
+  &.unstable {
+    color: goldenrod;
+  }
 }
 
 .draft {
-    color: gray;
+  color: gray;
 }
 
 .prOwner {
-    font-size: 0.8rem;
-    color: black;
-    font-weight: bold;
-    margin-right: 0.3rem;
-    margin-left: 0.3rem;
-    flex: 1;
+  font-size: 0.8rem;
+  color: black;
+  font-weight: bold;
+  margin-right: 0.3rem;
+  margin-left: 0.3rem;
+  flex: 1;
 }

@@ -18,7 +18,7 @@ const PrLineItem = ({ prDetails }) => {
   } = prDetails;
   let showNotificationsRef = useRef(notifications && notifications.length > 0);
 
-  useEffect(()=> {
+  useEffect(() => {
     showNotificationsRef.current = notifications && notifications.length > 0;
   }, [notifications, notifications?.length]);
 
@@ -32,7 +32,7 @@ const PrLineItem = ({ prDetails }) => {
           <a
             href={linkAddress}
             className={cs(styles[state], styles.prLink, {
-              [styles.draft]: isDraft,
+              [styles.draft]: isDraft
             })}
           >
             {mergeableState.length > 0 && (
@@ -44,7 +44,7 @@ const PrLineItem = ({ prDetails }) => {
                   [styles.blocked]: mergeableState === "blocked",
                   "fa-rotate-right fa-spin": mergeableState === "unstable",
                   [styles.unstable]: mergeableState === "unstable",
-                  "fa-exclamation-triangle": mergeableState === "dirty",
+                  "fa-exclamation-triangle": mergeableState === "dirty"
                 })}
               ></i>
             )}
@@ -63,7 +63,9 @@ const PrLineItem = ({ prDetails }) => {
           </a>
         </p>
       </div>
-      {showNotificationsRef.current && <NotificationsList notifications={notifications}/>}
+      {showNotificationsRef.current && (
+        <NotificationsList notifications={notifications} />
+      )}
       <a href={owner.url} className={cs(styles.prOwner)}>
         {owner.name}
       </a>

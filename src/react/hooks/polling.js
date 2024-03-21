@@ -4,7 +4,7 @@ export function usePollingEffect(
   asyncCallback,
   {
     interval = 10_000, // 10 seconds
-    onCleanUp = () => {},
+    onCleanUp = () => {}
   } = {}
 ) {
   const timeoutIdRef = useRef(null);

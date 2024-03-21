@@ -13,12 +13,12 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "preload.js")
     },
     frame: false,
     transparent: false,
     alwaysOnTop: true,
-    focusable: false,
+    focusable: false
   });
 
   // and load the index.html of the app.
@@ -49,14 +49,14 @@ app.whenReady().then(() => {
   ipcMain.handle("github-login", () => {
     const options = {
       client_id: CLIENT_ID,
-      scopes: ["user:email", "notifications"], // Scopes limit access for OAuth tokens.
+      scopes: ["user:email", "notifications"] // Scopes limit access for OAuth tokens.
     };
     githubAuthWindow = new BrowserWindow({
       width: 800,
       height: 600,
       show: false,
       webPreferences: {
-        preload: path.join(__dirname, "preload.js"),
+        preload: path.join(__dirname, "preload.js")
       },
       parent: mainWindow,
       modal: true
@@ -71,7 +71,7 @@ app.whenReady().then(() => {
       "&state=" +
       state +
       "&scope=" +
-      scopes
+      scopes +
       "&login";
     githubAuthWindow.loadURL(authUrl);
     githubAuthWindow.show();
@@ -100,7 +100,7 @@ app.whenReady().then(() => {
             const oauthResParams = new URLSearchParams(oAuthQuery);
             const accessToken = oauthResParams.get("access_token");
             mainWindow.webContents.send("set-gh-access-token", {
-              access_token: accessToken,
+              access_token: accessToken
             });
           });
         });
