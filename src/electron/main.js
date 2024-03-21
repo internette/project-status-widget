@@ -16,7 +16,9 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"),
     },
     frame: false,
-    transparent: true,
+    transparent: false,
+    alwaysOnTop: true,
+    focusable: false,
   });
 
   // and load the index.html of the app.
@@ -56,6 +58,8 @@ app.whenReady().then(() => {
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
+      parent: mainWindow,
+      modal: true
     });
     const state = require("crypto").randomBytes(16).toString("hex");
     const scopes = ["notifications"].join();
