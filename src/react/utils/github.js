@@ -18,7 +18,17 @@ export const getAdditionalPrDetails = async ({ octokit, prNumber, repository }) 
     }
 };
 
-export const getPrs = async ({ username, octokit })=> {
+export const getPrNotifications = async ({ octokit, prNumber, repository }) => {
+    const allNotifications = await octokit.paginate(octokit.rest.activity.listNotificationsForAuthenticatedUser).then(notifications => notifications);
+    const notificationsForPr = allNotifications.filter(notification => {
+        const matchesPr = notification.subject.url.indexOf(`${repository.owner}/${repository.name}/pulls/${prNumber}`) >= 0;
+        const isUnread = notification.unread;
+        return matchesPr && isUnread;
+    });
+    return notificationsForPr;
+}
+
+export const getPrs = async ({ username, octokit, isUpdate = false })=> {
     const searchQueryParams = `is:open is:pr involves:${username}`;
     const searchQuery = "?q=" + encodeURIComponent(searchQueryParams);
     const fullSearch = "GET /search/issues" + searchQuery;
@@ -45,6 +55,12 @@ export const getPrs = async ({ username, octokit })=> {
             name: repoName,
             owner: repoOwner,
         };
+        if(isUpdate){
+            const notifications = await getPrNotifications({ octokit, prNumber: pr.number, repository: prDetails.repository });
+            prDetails["nofitications"] = notifications;
+        } else {
+            prDetails["notifications"] = [];
+        }
         const additionalPrDetails = await getAdditionalPrDetails({ octokit, prNumber: pr.number, repository: prDetails.repository });
         prDetails['mergeableState'] = additionalPrDetails.mergeableState;
         prDetails['prId'] = additionalPrDetails.prId;

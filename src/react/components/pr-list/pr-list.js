@@ -5,7 +5,7 @@ import styles from "./pr-list.module.scss";
 const PrList = ({ prs, provider }) => {
   return (
     <ul className={cs(styles.prList)}>
-      {prs.map((pr) => {
+      {prs.map((pr, index) => {
         const { title, html_url, state, draft, user, id, number, repository, mergeableState } =
           pr;
         const prOwner = {
@@ -24,7 +24,7 @@ const PrList = ({ prs, provider }) => {
           state,
           mergeableState,
         };
-        return <PrLineItem prDetails={prDetails} key={`pr-${id}`} />;
+        return <PrLineItem prDetails={prDetails} index={index} key={`pr-${id}`} />;
       })}
     </ul>
   );

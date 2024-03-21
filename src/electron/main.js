@@ -16,7 +16,9 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"),
     },
     frame: false,
-    transparent: true,
+    transparent: false,
+    alwaysOnTop: true,
+    focusable: false,
   });
 
   // and load the index.html of the app.
@@ -56,8 +58,11 @@ app.whenReady().then(() => {
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
+      parent: mainWindow,
+      modal: true
     });
     const state = require("crypto").randomBytes(16).toString("hex");
+    const scopes = ["notifications"].join();
     const githubUrl = "https://github.com/login/oauth/authorize?";
     const authUrl =
       githubUrl +
@@ -65,6 +70,8 @@ app.whenReady().then(() => {
       options.client_id +
       "&state=" +
       state +
+      "&scope=" +
+      scopes +
       "&login";
     githubAuthWindow.loadURL(authUrl);
     githubAuthWindow.show();

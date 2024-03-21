@@ -6,11 +6,16 @@
     justify-content: space-between;
     width: 100%;
     align-items: center;
+    height: 3rem;
+    overflow: hidden;
+    position: relative;
+    container-type: size;
     &:hover {
         background-color: lightgray;
     }
     a {
         text-decoration: none;
+        -webkit-app-region: no-drag;
     }
 }
 
