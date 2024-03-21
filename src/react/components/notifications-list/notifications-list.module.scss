@@ -7,4 +7,13 @@
     width: 6rem;
     height: 3rem;
     position: relative;
+    display: none;
+}
+
+
+
+@container(width > 500px){
+    .notificationsListContainer {
+        display: block;
+    }  
 }

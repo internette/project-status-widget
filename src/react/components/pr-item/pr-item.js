@@ -16,13 +16,11 @@ const PrLineItem = ({ prDetails }) => {
     prId,
     notifications
   } = prDetails;
-  let meetsMinWidthRef = useRef(document.body.clientWidth > 400);
-  let showNotificationsRef = useRef(notifications && notifications.length > 0 && meetsMinWidthRef.current);
+  let showNotificationsRef = useRef(notifications && notifications.length > 0);
 
   useEffect(()=> {
-    meetsMinWidthRef.current = document.body.clientWidth > 400;
-    showNotificationsRef.current = notifications && notifications.length > 0 && meetsMinWidthRef.current;
-  }, [document.body.clientWidth, notifications, notifications?.length])
+    showNotificationsRef.current = notifications && notifications.length > 0;
+  }, [notifications, notifications?.length]);
 
   return (
     <li

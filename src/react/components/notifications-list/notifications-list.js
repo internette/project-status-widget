@@ -4,19 +4,19 @@ import Notification from "@psw/components/notification/notification";
 import styles from "./notifications-list.module.scss";
 
 const NotificationsList = ({ notifications }) => {
+  console.log(notifications);
   const isOnlyNotification = notifications.length === 1;
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const indexRef = useRef(0);
   const notificationRef = useRef(notifications[0]);
+  const [animateNextNotification, setAnimateNextNotification] = useState(false);
   useEffect(() => {
-    if (!isOnlyNotification) {
-        const setNextIndex = setTimeout(()=> {
-            const nextIndex = currentIndex === notifications.length -1 ? 0 : currentIndex + 1;
-            setCurrentIndex(nextIndex);
-            notificationRef.current = notifications[nextIndex];
-        }, 2000);
-        return ()=> clearTimeout(setNextIndex);
+    if (!isOnlyNotification && animateNextNotification) {
+      const nextIndex = indexRef.current === notifications.length -1 ? 0 : indexRef.current + 1;
+      indexRef.current = nextIndex;
+      notificationRef.current = notifications[nextIndex];
+      setAnimateNextNotification(false);
     }
-  }, [currentIndex, isOnlyNotification, notifications]);
+  }, [isOnlyNotification, notifications, animateNextNotification]);
 
   return (
     <div className={cs(styles.notificationsListContainer)}>
@@ -24,6 +24,7 @@ const NotificationsList = ({ notifications }) => {
         <Notification
           notificationDetails={notificationRef.current}
           isOnlyNotification={isOnlyNotification}
+          setAnimateNextNotification={setAnimateNextNotification}
         />
       </div>
     </div>
