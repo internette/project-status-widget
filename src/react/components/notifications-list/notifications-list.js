@@ -11,7 +11,10 @@ const NotificationsList = ({ notifications }) => {
   const [animateNextNotification, setAnimateNextNotification] = useState(false);
   useEffect(() => {
     if (!isOnlyNotification && animateNextNotification) {
-      const nextIndex = indexRef.current === notifications.length -1 ? 0 : indexRef.current + 1;
+      const nextIndex =
+        indexRef.current === notifications.length - 1
+          ? 0
+          : indexRef.current + 1;
       indexRef.current = nextIndex;
       notificationRef.current = notifications[nextIndex];
       setAnimateNextNotification(false);

@@ -12,15 +12,15 @@ function App() {
   return (
     <div className={cs(styles.App)}>
       <OctokitContext.Provider value={[octokitContext, setOctokitContext]}>
-          {authToken.length > 0 ? (
-            <AllPrsList prs={prs} setPrs={setPrs}/>
-          ) : (
-            <SignInButtons
-              setAuthToken={setAuthToken}
-              authToken={authToken}
-              setPrs={setPrs}
-            />
-          )}
+        {authToken.length > 0 ? (
+          <AllPrsList prs={prs} setPrs={setPrs} />
+        ) : (
+          <SignInButtons
+            setAuthToken={setAuthToken}
+            authToken={authToken}
+            setPrs={setPrs}
+          />
+        )}
       </OctokitContext.Provider>
     </div>
   );

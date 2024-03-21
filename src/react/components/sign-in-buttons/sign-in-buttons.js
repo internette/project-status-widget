@@ -9,12 +9,12 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
   const ghCallback = useCallback(
     async ({ access_token }) => {
       const octokit = new Octokit({
-        auth: access_token,
+        auth: access_token
       });
       const userResp = await octokit.request("GET /user", {
         headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
+          "X-GitHub-Api-Version": "2022-11-28"
+        }
       });
       const username = await userResp.data.login;
       setOctokitContext({ context: octokit, username });
@@ -48,13 +48,13 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
     {
       provider: "github",
       callback: ghCallback,
-      onclickHandler: ghClickHandler,
+      onclickHandler: ghClickHandler
     },
     {
       provider: "gitlab",
       callback: glCallback,
-      onclickHandler: glClickHandler,
-    },
+      onclickHandler: glClickHandler
+    }
   ];
   return (
     <div>

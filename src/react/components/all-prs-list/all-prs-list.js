@@ -1,9 +1,9 @@
-import {useContext} from "react";
+import { useContext } from "react";
 import cs from "classnames";
 import PrList from "@psw/components/pr-list/pr-list";
 import { usePollingEffect } from "@psw/hooks/polling";
 import { OctokitContext } from "@psw/contexts/github";
-import {getPrs} from "@psw/utils/github";
+import { getPrs } from "@psw/utils/github";
 import styles from "./all-prs-list.module.scss";
 
 const AllPrsList = ({ prs, setPrs }) => {
@@ -20,34 +20,46 @@ const AllPrsList = ({ prs, setPrs }) => {
     name: "Gitlab",
     icon: "square-gitlab",
     baseHref: "https://gitlab.com",
-    username: '',
+    username: "",
     context: null
   };
   const providers = [githubDataObject, gitlabDataObject];
-  usePollingEffect(async ()=> {
-    return await providers.map(async (provider) => {
-      const providerName = provider.name.toLowerCase();
-      if(providerName === 'github'){
-        const fetchedPrs = await getPrs({ username: githubDataObject.username, octokit: githubDataObject.context, isUpdate: true});
-        const prsByProvider = prs[providerName];
-        const updatedPrs = fetchedPrs.map(newPr => {
-          if(prsByProvider.filter(oldPr => { return oldPr.id !== newPr.id})){
-            return newPr;
-          } else {
-            const currPr = prsByProvider.filter(oldPr => { return oldPr.id === newPr.id})[0];
-            return {...currPr, ...newPr};
-          }
-        });
-        return await setPrs({[providerName]: updatedPrs});
-      }
-    });
-  },
-  { interval: 300000 });
+  usePollingEffect(
+    async () => {
+      return await providers.map(async (provider) => {
+        const providerName = provider.name.toLowerCase();
+        if (providerName === "github") {
+          const fetchedPrs = await getPrs({
+            username: githubDataObject.username,
+            octokit: githubDataObject.context,
+            isUpdate: true
+          });
+          const prsByProvider = prs[providerName];
+          const updatedPrs = fetchedPrs.map((newPr) => {
+            if (
+              prsByProvider.filter((oldPr) => {
+                return oldPr.id !== newPr.id;
+              })
+            ) {
+              return newPr;
+            } else {
+              const currPr = prsByProvider.filter((oldPr) => {
+                return oldPr.id === newPr.id;
+              })[0];
+              return { ...currPr, ...newPr };
+            }
+          });
+          return await setPrs({ [providerName]: updatedPrs });
+        }
+      });
+    },
+    { interval: 300000 }
+  );
   return providers.map((provider) => {
     const providerNameLowercase = provider.name.toLowerCase();
     const hasPrs =
       prs[providerNameLowercase] && prs[providerNameLowercase].length > 0;
-    
+
     return (
       <section className={cs(styles.providerSection)}>
         <input
