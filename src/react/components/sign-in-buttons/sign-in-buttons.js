@@ -1,8 +1,8 @@
 import { useEffect, useCallback, useContext } from "react";
 import { Octokit } from "octokit";
 import { OctokitContext, GitlabUserContext } from "@psw/contexts";
-import { getPrs } from "@psw/utils/github";
-import { getPrs as getGitlabPrs, getGitlabData } from "@psw/utils/gitlab";
+import { getGithubPrs } from "@psw/utils/github";
+import { getGitlabPrs, getGitlabData } from "@psw/utils/gitlab";
 import { GITLAB_API_URL } from "@psw/constants";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
@@ -22,7 +22,7 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
       const username = await userResp.data.login;
       setOctokitContext({ context: octokit, username });
       if (username) {
-        const currentPrs = await getPrs({ octokit, username });
+        const currentPrs = await getGithubPrs({ octokit, username });
         setPrs({ github: currentPrs });
       }
       setAuthToken(access_token);
@@ -35,12 +35,12 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
   };
 
   useEffect(() => {
-    if (window && window.ghLogin && authToken.length <= 0) {
+    if (window && window.ghLogin) {
       window.ghLogin.receive((event, args) => {
         ghCallback(args);
       });
     }
-  }, [ghCallback, authToken]);
+  }, [ghCallback]);
 
   const glCallback = useCallback(
     async ({ access_token, refresh_token }) => {
@@ -55,7 +55,7 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
           id,
           authToken: access_token
         });
-        console.log(gitlabPrs);
+        setPrs({ gitlab: gitlabPrs });
       }
       const gitlabUser = {
         authToken: access_token,
@@ -65,18 +65,14 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
       };
       setGitlabUser(gitlabUser);
     },
-    [setGitlabUser]
+    [setGitlabUser, setPrs]
   );
 
   const glClickHandler = () => {
     window.glLogin.send();
   };
   useEffect(() => {
-    if (
-      window &&
-      window.glLogin &&
-      (!gitlabUser.authToken || gitlabUser.authToken <= 0)
-    ) {
+    if (window && window.glLogin) {
       window.glLogin.receive((event, args) => {
         glCallback(args);
       });

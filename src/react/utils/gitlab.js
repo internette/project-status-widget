@@ -10,7 +10,25 @@ export const getGitlabData = async ({ authToken, path }) => {
   return responseAsJson;
 };
 
-export const getPrs = async ({ isUpdate = false, username, id, authToken }) => {
+const getProjectData = async ({ authToken, projectId }) => {
+  const projectDetailsData = await getGitlabData({
+    authToken,
+    path: `/projects/${projectId}`
+  });
+  const projectDetails = {
+    url: projectDetailsData.http_url_to_repo,
+    name: projectDetailsData.path,
+    owner: projectDetailsData.namespace.path
+  };
+  return projectDetails;
+};
+
+export const getGitlabPrs = async ({
+  isUpdate = false,
+  username,
+  id,
+  authToken
+}) => {
   let PRs = [];
   const authoredPrs = await getGitlabData({
     authToken,
@@ -28,7 +46,34 @@ export const getPrs = async ({ isUpdate = false, username, id, authToken }) => {
     if (notAuthored) {
       PRs.push(reviewerPr);
     }
+    return;
   });
-  console.log(PRs);
-  return PRs;
+  const prsWithRepoInfo = Promise.all(
+    PRs.map(async (pr) => {
+      const formattedPr = pr;
+      formattedPr["notifications"] = [];
+      formattedPr["mergeableState"] = pr.merge_status;
+      formattedPr["detailedMergeableState"] = pr.detailed_merge_status;
+      formattedPr["html_url"] = pr.web_url;
+      formattedPr["id"] = pr.id;
+      formattedPr["number"] = pr.iid;
+      const prUser = {
+        login: pr.author.username,
+        html_url: pr.author.web_url
+      };
+      formattedPr["user"] = prUser;
+      const projectDetails = await getProjectData({
+        authToken,
+        projectId: pr.project_id
+      });
+      formattedPr["repository"] = {
+        url: projectDetails.url,
+        name: projectDetails.name,
+        owner: projectDetails.owner,
+        id: pr.project_id
+      };
+      return formattedPr;
+    })
+  );
+  return prsWithRepoInfo;
 };
