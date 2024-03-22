@@ -77,7 +77,7 @@ app.whenReady().then(() => {
     githubAuthWindow.show();
     githubAuthWindow.webContents.openDevTools();
 
-    const handleCallback = (url) => {
+    const handleGithubCallback = (url) => {
       // If there is a code, proceed to get token from github
       const queryString = url.split("callback")[1];
       const urlParams = new URLSearchParams(queryString);
@@ -114,7 +114,7 @@ app.whenReady().then(() => {
     };
 
     githubAuthWindow.webContents.on("did-navigate", function (event, url) {
-      handleCallback(url);
+      handleGithubCallback(url);
     });
     githubAuthWindow.webContents.on(
       "did-get-redirect-request",
