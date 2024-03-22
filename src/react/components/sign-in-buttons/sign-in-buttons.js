@@ -1,11 +1,13 @@
 import { useEffect, useCallback, useContext } from "react";
 import { Octokit } from "octokit";
-import { OctokitContext } from "@psw/contexts/github";
+import { OctokitContext, GitlabUserContext } from "@psw/contexts";
 import { getPrs } from "@psw/utils/github";
+import { GITLAB_API_URL } from "@psw/constants";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
 const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
   const [octokitContext, setOctokitContext] = useContext(OctokitContext);
+  const [gitlabUser, setGitlabUser] = useContext(GitlabUserContext);
   const ghCallback = useCallback(
     async ({ access_token }) => {
       const octokit = new Octokit({
@@ -26,14 +28,9 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
     },
     [setAuthToken, setPrs, setOctokitContext]
   );
+
   const ghClickHandler = () => {
     window.ghLogin.send();
-  };
-  const glCallback = () => {
-    console.log("placeholder");
-  };
-  const glClickHandler = () => {
-    window.glLogin.send();
   };
 
   useEffect(() => {
@@ -43,6 +40,33 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
       });
     }
   }, [ghCallback, authToken]);
+
+  const glCallback = useCallback(async ({ access_token, refresh_token }) => {
+    const gitlabUserResponse = await fetch(`${GITLAB_API_URL}/user/`, {
+      headers: {
+        'Authorization': `Bearer ${access_token}`,
+      }
+    });
+    const { username, id } = await gitlabUserResponse.json();
+    const gitlabUser = {
+      authToken: access_token,
+      refreshToken: refresh_token,
+      username,
+      id
+    };
+    setGitlabUser(gitlabUser);
+  }, [setGitlabUser]);
+
+  const glClickHandler = () => {
+    window.glLogin.send();
+  };
+  useEffect(() => {
+    if (window && window.glLogin && (!gitlabUser.authToken || gitlabUser.authToken <= 0)) {
+      window.glLogin.receive((event, args) => {
+        glCallback(args);
+      });
+    }
+  }, [glCallback, gitlabUser.authToken]);
 
   const signinTypes = [
     {
