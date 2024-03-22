@@ -4,7 +4,6 @@ import Notification from "@psw/components/notification/notification";
 import styles from "./notifications-list.module.scss";
 
 const NotificationsList = ({ notifications }) => {
-  console.log(notifications);
   const isOnlyNotification = notifications.length === 1;
   const indexRef = useRef(0);
   const notificationRef = useRef(notifications[0]);

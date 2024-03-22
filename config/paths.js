@@ -60,6 +60,7 @@ module.exports = {
   appIndexJs: resolveModule(resolveApp, "src/react/index"),
   appPackageJson: resolveApp("package.json"),
   appSrc: resolveApp("src"),
+  appConstants: resolveApp("src/constants"),
   appComponents: resolveApp("src/react/components"),
   appContexts: resolveApp("src/react/contexts"),
   appAssets: resolveApp("src/react/assets"),

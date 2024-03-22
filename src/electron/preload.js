@@ -10,3 +10,14 @@ contextBridge.exposeInMainWorld("ghLogin", {
     );
   }
 });
+
+contextBridge.exposeInMainWorld("glLogin", {
+  send: (channel, data) => {
+    ipcRenderer.invoke("gitlab-login");
+  },
+  receive: (callback) => {
+    ipcRenderer.on("set-gl-access-token", (event, args) =>
+      callback(event, args)
+    );
+  }
+});

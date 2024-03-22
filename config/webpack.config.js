@@ -322,6 +322,7 @@ module.exports = function (webpackEnv) {
         ...(modules.webpackAliases || {}),
         "@psw/assets": paths.appAssets,
         "@psw/electron": paths.electronSrc,
+        "@psw/constants": paths.appConstants,
         "@psw/components": paths.appComponents,
         "@psw/contexts": paths.appContexts,
         "@psw/hooks": paths.appHooks,
