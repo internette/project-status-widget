@@ -87,7 +87,7 @@ app.whenReady().then(() => {
         const { net } = require("electron");
         githubAuthWindow.destroy();
         const tokenUrl =
-          "https://project-status-widget-api.vercel.app/api/get-token?authToken=" +
+          "https://project-status-widget-api.vercel.app/api/github/get-token?authToken=" +
           code;
         const request = net.request(tokenUrl);
         let oAuthQuery = "";
