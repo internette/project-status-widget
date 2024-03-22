@@ -46,7 +46,7 @@ app.on("window-all-closed", function () {
   }
 });
 
-const getAuthCode = (url)=> {
+const getAuthCode = (url) => {
   const queryString = url.split("callback")[1];
   const urlParams = new URLSearchParams(queryString);
   const code = urlParams.get("code");
@@ -54,8 +54,8 @@ const getAuthCode = (url)=> {
   return {
     code,
     error
-  }
-}
+  };
+};
 
 app.whenReady().then(() => {
   ipcMain.handle("github-login", () => {
@@ -136,7 +136,7 @@ app.whenReady().then(() => {
       githubAuthWindow = null;
     });
   });
-  ipcMain.handle("gitlab-login", ()=> {
+  ipcMain.handle("gitlab-login", () => {
     gitlabAuthWindow = new BrowserWindow({
       width: 800,
       height: 600,
@@ -148,14 +148,14 @@ app.whenReady().then(() => {
       modal: true
     });
     const redirect_uri = "http://localhost:3000/callback";
-    const gitlabOAuthURL = `https://gitlab.com/oauth/authorize?client_id=${GITLAB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&scope=read_user`;
+    const gitlabOAuthURL = `https://gitlab.com/oauth/authorize?client_id=${GITLAB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&scope=${encodeURIComponent("read_api read_user read_repository")}`;
     gitlabAuthWindow.loadURL(gitlabOAuthURL);
     gitlabAuthWindow.show();
     gitlabAuthWindow.webContents.openDevTools();
 
     const handleGitlabCallback = (url) => {
       const { code, error } = getAuthCode(url);
-      if(code){
+      if (code) {
         const { net } = require("electron");
         gitlabAuthWindow.destroy();
         const tokenUrl =
@@ -182,7 +182,7 @@ app.whenReady().then(() => {
             "log you in using Gitlab. Please try again."
         );
       }
-    }
+    };
     gitlabAuthWindow.webContents.on("did-navigate", function (event, url) {
       handleGitlabCallback(url);
     });
