@@ -1,11 +1,12 @@
 const { app, BrowserWindow, ipcMain } = require("electron/main");
 const path = require("node:path");
-const { CLIENT_ID } = require("../constants.js");
+const { GITHUB_CLIENT_ID, GITLAB_CLIENT_ID } = require("../constants.js");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let githubAuthWindow;
+let gitlabAuthWindow;
 
 function createWindow() {
   // Create the browser window.
@@ -45,10 +46,21 @@ app.on("window-all-closed", function () {
   }
 });
 
+const getAuthCode = (url)=> {
+  const queryString = url.split("callback")[1];
+  const urlParams = new URLSearchParams(queryString);
+  const code = urlParams.get("code");
+  const error = urlParams.get("error");
+  return {
+    code,
+    error
+  }
+}
+
 app.whenReady().then(() => {
   ipcMain.handle("github-login", () => {
     const options = {
-      client_id: CLIENT_ID,
+      client_id: GITHUB_CLIENT_ID,
       scopes: ["user:email", "notifications"] // Scopes limit access for OAuth tokens.
     };
     githubAuthWindow = new BrowserWindow({
@@ -79,10 +91,7 @@ app.whenReady().then(() => {
 
     const handleGithubCallback = (url) => {
       // If there is a code, proceed to get token from github
-      const queryString = url.split("callback")[1];
-      const urlParams = new URLSearchParams(queryString);
-      const code = urlParams.get("code");
-      const error = urlParams.get("error");
+      const { code, error } = getAuthCode(url);
       if (code) {
         const { net } = require("electron");
         githubAuthWindow.destroy();
@@ -128,7 +137,65 @@ app.whenReady().then(() => {
     });
   });
   ipcMain.handle("gitlab-login", ()=> {
+    gitlabAuthWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      show: false,
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js")
+      },
+      parent: mainWindow,
+      modal: true
+    });
+    const redirect_uri = "http://localhost:3000/callback";
+    const gitlabOAuthURL = `https://gitlab.com/oauth/authorize?client_id=${GITLAB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&scope=read_user`;
+    gitlabAuthWindow.loadURL(gitlabOAuthURL);
+    gitlabAuthWindow.show();
+    gitlabAuthWindow.webContents.openDevTools();
 
+    const handleGitlabCallback = (url) => {
+      const { code, error } = getAuthCode(url);
+      if(code){
+        const { net } = require("electron");
+        gitlabAuthWindow.destroy();
+        const tokenUrl =
+          "https://project-status-widget-api.vercel.app/api/gitlab/get-token?authToken=" +
+          code;
+        const request = net.request(tokenUrl);
+        let oAuthQuery = "";
+        request.on("response", (response) => {
+          response.on("data", (chunk) => {
+            oAuthQuery += chunk;
+          });
+          response.on("end", () => {
+            const { access_token, refresh_token } = JSON.parse(oAuthQuery);
+            mainWindow.webContents.send("set-gl-access-token", {
+              access_token,
+              refresh_token
+            });
+          });
+        });
+        request.end();
+      } else if (error) {
+        alert(
+          "Oops! Something went wrong and we couldn't" +
+            "log you in using Gitlab. Please try again."
+        );
+      }
+    }
+    gitlabAuthWindow.webContents.on("did-navigate", function (event, url) {
+      handleGitlabCallback(url);
+    });
+    gitlabAuthWindow.webContents.on(
+      "did-get-redirect-request",
+      function (event, oldUrl, newUrl) {
+        handleGitlabCallback(newUrl);
+      }
+    );
+    // Reset the authWindow on close
+    gitlabAuthWindow.on("closed", () => {
+      gitlabAuthWindow = null;
+    });
   });
 
   createWindow();

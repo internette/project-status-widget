@@ -33,7 +33,7 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
     console.log("placeholder");
   };
   const glClickHandler = () => {
-    console.log("placeholder");
+    window.glLogin.send();
   };
 
   useEffect(() => {
