@@ -119,7 +119,7 @@ app.whenReady().then(() => {
     githubAuthWindow.webContents.on(
       "did-get-redirect-request",
       function (event, oldUrl, newUrl) {
-        handleCallback(newUrl);
+        handleGithubCallback(newUrl);
       }
     );
     // Reset the authWindow on close
@@ -127,5 +127,9 @@ app.whenReady().then(() => {
       githubAuthWindow = null;
     });
   });
+  ipcMain.handle("gitlab-login", ()=> {
+
+  });
+
   createWindow();
 });
