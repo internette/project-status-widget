@@ -16,7 +16,6 @@ const PrLineItem = ({ prDetails }) => {
     prId,
     notifications
   } = prDetails;
-  console.log(prDetails);
   let showNotificationsRef = useRef(notifications && notifications.length > 0);
   useEffect(() => {
     showNotificationsRef.current = notifications && notifications.length > 0;

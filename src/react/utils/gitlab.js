@@ -23,8 +23,9 @@ const getProjectData = async ({ authToken, projectId }) => {
   return projectDetails;
 };
 
-const formatPrStatus = (merge_status) => {
+const formatPrStatus = (detailed_merge_status) => {
     const githubToGitlabMap = {
+        cannot_be_merged_recheck: 'unstable',
         blocked_status: 'blocked',
         checking: 'unstable',
         unchecked: 'unstable',
@@ -38,7 +39,7 @@ const formatPrStatus = (merge_status) => {
         needs_rebase: 'dirty',
         conflict: 'dirty'
     }
-    return githubToGitlabMap[merge_status];
+    return githubToGitlabMap[detailed_merge_status];
 }
 
 export const getGitlabPrs = async ({
@@ -70,8 +71,7 @@ export const getGitlabPrs = async ({
     PRs.map(async (pr) => {
       const formattedPr = pr;
       formattedPr["notifications"] = [];
-      formattedPr["mergeableState"] = formatPrStatus(pr.merge_status);
-      formattedPr["detailedMergeableState"] = pr.detailed_merge_status;
+      formattedPr["mergeableState"] = formatPrStatus(pr.detailed_merge_status);
       formattedPr["html_url"] = pr.web_url;
       formattedPr["id"] = pr.id;
       formattedPr["number"] = pr.iid;
