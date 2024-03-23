@@ -1,13 +1,15 @@
 import { useContext } from "react";
 import cs from "classnames";
 import PrList from "@psw/components/pr-list/pr-list";
+import GitlabLoginButton from "@psw/components/sign-in-buttons/gitlab-login-button";
+import GithubLoginButton from "@psw/components/sign-in-buttons/github-login-button";
 import { usePollingEffect } from "@psw/hooks/polling";
 import { OctokitContext, GitlabUserContext } from "@psw/contexts";
 import { getGithubPrs } from "@psw/utils/github";
 import { getGitlabPrs } from "@psw/utils/gitlab";
 import styles from "./all-prs-list.module.scss";
 
-const AllPrsList = ({ prs, setPrs }) => {
+const AllPrsList = ({ prs }) => {
   const [githubContext, setGithubContext] = useContext(OctokitContext);
   const [gitlabUserContext, setGitlabUserContext] =
     useContext(GitlabUserContext);
@@ -18,52 +20,76 @@ const AllPrsList = ({ prs, setPrs }) => {
     prHref: "https://github.com/pulls",
     username: githubContext.username,
     context: githubContext.context,
-    prs: prs.github || []
+    prs: prs.current.github || [],
+    loginBtn: (
+      <GithubLoginButton
+        prs={prs}
+        classes={cs(styles.loginBtn, styles.githubLoginBtn)}
+      />
+    )
   };
   const gitlabDataObject = {
     name: "Gitlab",
     icon: "square-gitlab",
     baseHref: "https://gitlab.com",
+    prHref: "",
     username: gitlabUserContext.username,
     context: null,
-    prs: prs.gitlab || []
+    prs: prs.current.gitlab || [],
+    loginBtn: (
+      <GitlabLoginButton
+        prs={prs}
+        classes={cs(styles.loginBtn, styles.gitlabLoginBtn)}
+      />
+    )
   };
   const providers = [githubDataObject, gitlabDataObject];
+
   usePollingEffect(
     async () => {
-      return await providers.map(async (provider) => {
-        const providerName = provider.name.toLowerCase();
-        if (prs[providerName] && providerName === "github") {
-          const fetchedPrs = await getGithubPrs({
-            username: githubDataObject.username,
-            octokit: githubDataObject.context,
-            isUpdate: true
-          });
-          const prsByProvider = prs[providerName];
-          const updatedPrs = fetchedPrs.map((newPr) => {
-            if (
-              prsByProvider.filter((oldPr) => {
-                return oldPr.id !== newPr.id;
-              })
-            ) {
-              return newPr;
-            } else {
-              const currPr = prsByProvider.filter((oldPr) => {
-                return oldPr.id === newPr.id;
-              })[0];
-              return { ...currPr, ...newPr };
-            }
-          });
-          return await setPrs({ [providerName]: updatedPrs });
-        }
-      });
+      return await Promise.all(
+        providers.map(async (provider) => {
+          const providerName = provider.name.toLowerCase();
+          if (providerName === "github" && prs.current[providerName]) {
+            const fetchedPrs = await getGithubPrs({
+              username: githubDataObject.username,
+              octokit: githubDataObject.context,
+              isUpdate: true
+            });
+            const prsByProvider = prs.current[providerName];
+            const updatedPrs = fetchedPrs.map((newPr) => {
+              if (
+                prsByProvider.filter((oldPr) => {
+                  return oldPr.id !== newPr.id;
+                })
+              ) {
+                return newPr;
+              } else {
+                const currPr = prsByProvider.filter((oldPr) => {
+                  return oldPr.id === newPr.id;
+                })[0];
+                return { ...currPr, ...newPr };
+              }
+            });
+            const updatedPrsObj = {
+              ...prs.current,
+              [providerName]: updatedPrs
+            };
+            prs.current = updatedPrsObj;
+          }
+        })
+      );
     },
     { interval: 300000 }
   );
   return providers.map((provider) => {
     const providerNameLowercase = provider.name.toLowerCase();
     const hasPrs = provider.prs.length > 0;
-
+    const additionalLoginProviders = providers.filter((currentProvider) => {
+      return currentProvider.name.toLowerCase() !== providerNameLowercase;
+    });
+    const showLoginBtn =
+      additionalLoginProviders.length > 0 && provider.username === undefined;
     return (
       <section className={cs(styles.providerSection)}>
         <input
@@ -113,6 +139,7 @@ const AllPrsList = ({ prs, setPrs }) => {
               </p>
             </div>
           )}
+          {showLoginBtn && provider.loginBtn}
         </div>
       </section>
     );

@@ -13,16 +13,16 @@ function App() {
   const [gitlabUser, setGitlabUser] = useState({});
   const [githubUser, setGithubUser] = useState({});
   const [octokitContext, setOctokitContext] = useState({});
-  const [prs, setPrs] = useState({});
+  const prs = useRef({});
   const checkForPrs = useCallback(
     (provider) => {
       return (
-        Object.keys(prs).length > 0 &&
-        prs.hasOwnProperty(provider) &&
-        prs[provider].length > 0
+        Object.keys(prs.current).length > 0 &&
+        prs.current.hasOwnProperty(provider) &&
+        prs.current[provider].length > 0
       );
     },
-    [prs]
+    []
   );
   let hasGithubPrs = useRef(false);
   let hasGitlabPrs = useRef(false);
@@ -38,9 +38,9 @@ function App() {
         <GitlabUserContext.Provider value={[gitlabUser, setGitlabUser]}>
           <OctokitContext.Provider value={[octokitContext, setOctokitContext]}>
             {hasPrs.current ? (
-              <AllPrsList prs={prs} setPrs={setPrs} />
+              <AllPrsList prs={prs} />
             ) : (
-              <SignInButtons setPrs={setPrs} />
+              <SignInButtons prs={prs} />
             )}
           </OctokitContext.Provider>
         </GitlabUserContext.Provider>
