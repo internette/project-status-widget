@@ -22,7 +22,7 @@ function App() {
         prs.current[provider].length > 0
       );
     },
-    [prs.current]
+    []
   );
   let hasGithubPrs = useRef(false);
   let hasGitlabPrs = useRef(false);
