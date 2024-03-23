@@ -1,2 +1,2 @@
 export { GitlabUserContext } from "./gitlab";
-export { OctokitContext } from "./github";
+export { OctokitContext, GithubUserContext } from "./github";
