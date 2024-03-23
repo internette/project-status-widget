@@ -1,13 +1,11 @@
 import { useEffect, useCallback, useContext } from "react";
-import {
-  GitlabUserContext
-} from "@psw/contexts";
+import { GitlabUserContext } from "@psw/contexts";
 import { getGitlabPrs, getGitlabData } from "@psw/utils/gitlab";
 import { GITLAB_API_URL } from "@psw/constants";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
-const GitlabLoginButton = ({ setPrs, classes='' }) => {
-    const [gitlabUser, setGitlabUser] = useContext(GitlabUserContext);
+const GitlabLoginButton = ({ prs, classes = "" }) => {
+  const [gitlabUser, setGitlabUser] = useContext(GitlabUserContext);
   const glCallback = useCallback(
     async ({ access_token, refresh_token }) => {
       const { username, id } = await getGitlabData({
@@ -21,7 +19,8 @@ const GitlabLoginButton = ({ setPrs, classes='' }) => {
           id,
           authToken: access_token
         });
-        setPrs({ gitlab: gitlabPrs });
+        const newPrsObj = { ...prs.current, gitlab: gitlabPrs };
+        prs.current = newPrsObj;
       }
       const gitlabUser = {
         authToken: access_token,
@@ -31,7 +30,7 @@ const GitlabLoginButton = ({ setPrs, classes='' }) => {
       };
       setGitlabUser(gitlabUser);
     },
-    [setGitlabUser, setPrs]
+    [setGitlabUser, prs]
   );
 
   const glClickHandler = () => {
@@ -45,12 +44,12 @@ const GitlabLoginButton = ({ setPrs, classes='' }) => {
     }
   }, [glCallback]);
 
-    const signinType = {
-        provider: "gitlab",
-        callback: glCallback,
-        onclickHandler: glClickHandler
-    }
-    return <SignInButton signinType={signinType} classes={classes} />
-}
+  const signinType = {
+    provider: "gitlab",
+    callback: glCallback,
+    onclickHandler: glClickHandler
+  };
+  return <SignInButton signinType={signinType} classes={classes} />;
+};
 
 export default GitlabLoginButton;

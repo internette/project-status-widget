@@ -5,21 +5,23 @@ import GitlabLoginButton from "@psw/components/sign-in-buttons/gitlab-login-butt
 import GithubLoginButton from "@psw/components/sign-in-buttons/github-login-button";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
-const SignInButtons = ({ setPrs }) => {
+const SignInButtons = ({ prs }) => {
   const signinTypes = [
     {
       provider: "github",
-      element: <GithubLoginButton setPrs={setPrs} />
+      displayName: "Github",
+      element: <GithubLoginButton prs={prs} />
     },
     {
       provider: "gitlab",
-      element: <GitlabLoginButton setPrs={setPrs} />
+      displayName: "Gitlab",
+      element: <GitlabLoginButton prs={prs} />
     }
   ];
   return (
     <div>
       {signinTypes.map((signinType) => {
-        return signinType.element
+        return signinType.element;
       })}
     </div>
   );

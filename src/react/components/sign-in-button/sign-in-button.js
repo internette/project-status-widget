@@ -1,4 +1,7 @@
-const SignInButton = ({ signinType, classes='' }) => {
+import cs from "classnames";
+import styles from "./sign-in-button.module.scss";
+
+const SignInButton = ({ signinType, classes = "" }) => {
   const { provider, onclickHandler } = signinType;
   return (
     <button
@@ -8,7 +11,8 @@ const SignInButton = ({ signinType, classes='' }) => {
         "-webkit-app-region": "no-drag"
       }}
     >
-      {provider}
+      <i className={cs("fa-brands", `fa-${provider}`, styles.providerIcon)}></i>
+      Login with {provider}
     </button>
   );
 };
