@@ -17,10 +17,10 @@ const PrLineItem = ({ prDetails }) => {
     notifications
   } = prDetails;
   let showNotificationsRef = useRef(notifications && notifications.length > 0);
-
   useEffect(() => {
     showNotificationsRef.current = notifications && notifications.length > 0;
   }, [notifications, notifications?.length]);
+  const showIcon = mergeableState.length > 0 && !isDraft;
 
   return (
     <li
@@ -35,7 +35,7 @@ const PrLineItem = ({ prDetails }) => {
               [styles.draft]: isDraft
             })}
           >
-            {mergeableState.length > 0 && (
+            {showIcon && (
               <i
                 className={cs("fa-solid", styles.listIcon, {
                   "fa-check": mergeableState === "clean",

@@ -1,7 +1,8 @@
 import { useEffect, useCallback, useContext } from "react";
 import { Octokit } from "octokit";
 import { OctokitContext, GitlabUserContext } from "@psw/contexts";
-import { getPrs } from "@psw/utils/github";
+import { getGithubPrs } from "@psw/utils/github";
+import { getGitlabPrs, getGitlabData } from "@psw/utils/gitlab";
 import { GITLAB_API_URL } from "@psw/constants";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
@@ -21,7 +22,7 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
       const username = await userResp.data.login;
       setOctokitContext({ context: octokit, username });
       if (username) {
-        const currentPrs = await getPrs({ octokit, username });
+        const currentPrs = await getGithubPrs({ octokit, username });
         setPrs({ github: currentPrs });
       }
       setAuthToken(access_token);
@@ -34,34 +35,44 @@ const SignInButtons = ({ authToken, setAuthToken, setPrs }) => {
   };
 
   useEffect(() => {
-    if (window && window.ghLogin && authToken.length <= 0) {
+    if (window && window.ghLogin) {
       window.ghLogin.receive((event, args) => {
         ghCallback(args);
       });
     }
-  }, [ghCallback, authToken]);
+  }, [ghCallback]);
 
-  const glCallback = useCallback(async ({ access_token, refresh_token }) => {
-    const gitlabUserResponse = await fetch(`${GITLAB_API_URL}/user/`, {
-      headers: {
-        'Authorization': `Bearer ${access_token}`,
+  const glCallback = useCallback(
+    async ({ access_token, refresh_token }) => {
+      const { username, id } = await getGitlabData({
+        authToken: access_token,
+        path: "/user"
+      });
+      if (username) {
+        const gitlabPrs = await getGitlabPrs({
+          isUpdate: false,
+          username,
+          id,
+          authToken: access_token
+        });
+        setPrs({ gitlab: gitlabPrs });
       }
-    });
-    const { username, id } = await gitlabUserResponse.json();
-    const gitlabUser = {
-      authToken: access_token,
-      refreshToken: refresh_token,
-      username,
-      id
-    };
-    setGitlabUser(gitlabUser);
-  }, [setGitlabUser]);
+      const gitlabUser = {
+        authToken: access_token,
+        refreshToken: refresh_token,
+        username,
+        id
+      };
+      setGitlabUser(gitlabUser);
+    },
+    [setGitlabUser, setPrs]
+  );
 
   const glClickHandler = () => {
     window.glLogin.send();
   };
   useEffect(() => {
-    if (window && window.glLogin && (!gitlabUser.authToken || gitlabUser.authToken <= 0)) {
+    if (window && window.glLogin) {
       window.glLogin.receive((event, args) => {
         glCallback(args);
       });

@@ -37,7 +37,7 @@ export const getPrNotifications = async ({ octokit, prNumber, repository }) => {
   return notificationsForPr;
 };
 
-export const getPrs = async ({ username, octokit, isUpdate = false }) => {
+export const getGithubPrs = async ({ username, octokit, isUpdate = false }) => {
   const searchQueryParams = `is:open is:pr involves:${username}`;
   const searchQuery = "?q=" + encodeURIComponent(searchQueryParams);
   const fullSearch = "GET /search/issues" + searchQuery;

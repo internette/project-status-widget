@@ -2,34 +2,39 @@ import { useContext } from "react";
 import cs from "classnames";
 import PrList from "@psw/components/pr-list/pr-list";
 import { usePollingEffect } from "@psw/hooks/polling";
-import { OctokitContext } from "@psw/contexts/github";
-import { getPrs } from "@psw/utils/github";
+import { OctokitContext, GitlabUserContext } from "@psw/contexts";
+import { getGithubPrs } from "@psw/utils/github";
+import { getGitlabPrs } from "@psw/utils/gitlab";
 import styles from "./all-prs-list.module.scss";
 
 const AllPrsList = ({ prs, setPrs }) => {
   const [githubContext, setGithubContext] = useContext(OctokitContext);
+  const [gitlabUserContext, setGitlabUserContext] =
+    useContext(GitlabUserContext);
   const githubDataObject = {
     name: "Github",
     icon: "square-github",
     baseHref: "https://github.com",
     prHref: "https://github.com/pulls",
     username: githubContext.username,
-    context: githubContext.context
+    context: githubContext.context,
+    prs: prs.github || []
   };
   const gitlabDataObject = {
     name: "Gitlab",
     icon: "square-gitlab",
     baseHref: "https://gitlab.com",
-    username: "",
-    context: null
+    username: gitlabUserContext.username,
+    context: null,
+    prs: prs.gitlab || []
   };
   const providers = [githubDataObject, gitlabDataObject];
   usePollingEffect(
     async () => {
       return await providers.map(async (provider) => {
         const providerName = provider.name.toLowerCase();
-        if (providerName === "github") {
-          const fetchedPrs = await getPrs({
+        if (prs[providerName] && providerName === "github") {
+          const fetchedPrs = await getGithubPrs({
             username: githubDataObject.username,
             octokit: githubDataObject.context,
             isUpdate: true
@@ -57,8 +62,7 @@ const AllPrsList = ({ prs, setPrs }) => {
   );
   return providers.map((provider) => {
     const providerNameLowercase = provider.name.toLowerCase();
-    const hasPrs =
-      prs[providerNameLowercase] && prs[providerNameLowercase].length > 0;
+    const hasPrs = provider.prs.length > 0;
 
     return (
       <section className={cs(styles.providerSection)}>
@@ -90,10 +94,7 @@ const AllPrsList = ({ prs, setPrs }) => {
         </label>
         <div className={cs(styles.providerContent)}>
           {hasPrs ? (
-            <PrList
-              prs={prs[providerNameLowercase] || []}
-              provider={provider.name}
-            />
+            <PrList prs={provider.prs || []} provider={provider.name} />
           ) : (
             <div>
               <p>
