@@ -23,6 +23,24 @@ const getProjectData = async ({ authToken, projectId }) => {
   return projectDetails;
 };
 
+const formatPrStatus = (merge_status) => {
+    const githubToGitlabMap = {
+        blocked_status: 'blocked',
+        checking: 'unstable',
+        unchecked: 'unstable',
+        ci_must_pass: 'blocked',
+        ci_still_running: 'unstable',
+        discussions_not_resolved: 'blocked',
+        draft_status: 'blocked',
+        external_status_checks: 'blocked',
+        mergeable: 'clean',
+        not_approved: 'blocked',
+        needs_rebase: 'dirty',
+        conflict: 'dirty'
+    }
+    return githubToGitlabMap[merge_status];
+}
+
 export const getGitlabPrs = async ({
   isUpdate = false,
   username,
@@ -52,7 +70,7 @@ export const getGitlabPrs = async ({
     PRs.map(async (pr) => {
       const formattedPr = pr;
       formattedPr["notifications"] = [];
-      formattedPr["mergeableState"] = pr.merge_status;
+      formattedPr["mergeableState"] = formatPrStatus(pr.merge_status);
       formattedPr["detailedMergeableState"] = pr.detailed_merge_status;
       formattedPr["html_url"] = pr.web_url;
       formattedPr["id"] = pr.id;
