@@ -4,7 +4,7 @@ import { getGithubPrs } from "@psw/utils/github";
 import { GithubUserContext, OctokitContext } from "@psw/contexts";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
-const GithubLoginButton = ({ setPrs }) => {
+const GithubLoginButton = ({ setPrs, classes='' }) => {
     const [octokitContext, setOctokitContext] = useContext(OctokitContext);
     const [githubUser, setGithubUser] = useContext(GithubUserContext);
     const ghCallback = useCallback(
@@ -46,7 +46,7 @@ const GithubLoginButton = ({ setPrs }) => {
         callback: ghCallback,
         onclickHandler: ghClickHandler
     }
-    return <SignInButton signinType={signinType} />
+    return <SignInButton signinType={signinType} classes={classes} />
 }
 
 export default GithubLoginButton;

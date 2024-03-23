@@ -6,7 +6,7 @@ import { getGitlabPrs, getGitlabData } from "@psw/utils/gitlab";
 import { GITLAB_API_URL } from "@psw/constants";
 import SignInButton from "@psw/components/sign-in-button/sign-in-button";
 
-const GitlabLoginButton = ({ setPrs }) => {
+const GitlabLoginButton = ({ setPrs, classes='' }) => {
     const [gitlabUser, setGitlabUser] = useContext(GitlabUserContext);
   const glCallback = useCallback(
     async ({ access_token, refresh_token }) => {
@@ -50,7 +50,7 @@ const GitlabLoginButton = ({ setPrs }) => {
         callback: glCallback,
         onclickHandler: glClickHandler
     }
-    return <SignInButton signinType={signinType} />
+    return <SignInButton signinType={signinType} classes={classes} />
 }
 
 export default GitlabLoginButton;
