@@ -23,8 +23,31 @@ const getProjectData = async ({ authToken, projectId }) => {
   return projectDetails;
 };
 
+export const getToDosForPr = async ({ authToken, prId }) => {
+  const toDosData = await getGitlabData({
+    authToken,
+    path: '/todos?type=MergeRequest&state=pending'
+  });
+  const filteredToDosData = toDosData.filter(toDo => toDo.target.id === prId && toDo.target.state !== 'merged');
+  const gitlabToGithubReasonMap = {
+    assigned: "review_requested",
+    mentioned: "mentioned",
+    build_failed: "state_change",
+    unmergeable: "state_change",
+    approval_required: "approval_requested",
+    directly_addressed: "mentioned"
+  }
+  const formattedToDosData = filteredToDosData.map(toDo => {
+    return {
+      reason: gitlabToGithubReasonMap[toDosData.action_name],
+      id: `gitlab-todo-${toDosData.id}`
+    }
+  });
+  return formattedToDosData;
+}
+
 const formatPrStatus = (detailed_merge_status) => {
-  const githubToGitlabMap = {
+  const githubToGitlabStatusMap = {
     cannot_be_merged_recheck: "unstable",
     blocked_status: "blocked",
     checking: "unstable",
@@ -39,13 +62,12 @@ const formatPrStatus = (detailed_merge_status) => {
     needs_rebase: "dirty",
     conflict: "dirty"
   };
-  return githubToGitlabMap[detailed_merge_status];
+  return githubToGitlabStatusMap[detailed_merge_status];
 };
 
 export const getGitlabPrs = async ({
   isUpdate = false,
   username,
-  id,
   authToken
 }) => {
   let PRs = [];
@@ -70,7 +92,13 @@ export const getGitlabPrs = async ({
   const prsWithRepoInfo = Promise.all(
     PRs.map(async (pr) => {
       const formattedPr = pr;
-      formattedPr["notifications"] = [];
+      if(isUpdate){
+        const notifications = await getToDosForPr({ authToken, prId: pr.id });
+        formattedPr["notifications"] = notifications;
+        console.log(notifications);
+      } else {
+        formattedPr["notifications"] = [];
+      }
       formattedPr["mergeableState"] = formatPrStatus(pr.detailed_merge_status);
       formattedPr["html_url"] = pr.web_url;
       formattedPr["id"] = pr.id;

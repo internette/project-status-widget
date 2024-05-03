@@ -76,11 +76,37 @@ const AllPrsList = ({ prs }) => {
               [providerName]: updatedPrs
             };
             prs.current = updatedPrsObj;
+          } else if(providerName === "gitlab" && prs.current[providerName]){
+            const fetchedPrs = await getGitlabPrs({
+              username: gitlabDataObject.username,
+              authToken: gitlabUserContext.authToken,
+              isUpdate: true
+            });
+            const prsByProvider = prs.current[providerName];
+            const updatedPrs = fetchedPrs.map((newPr) => {
+              if (
+                prsByProvider.filter((oldPr) => {
+                  return oldPr.id !== newPr.id;
+                })
+              ) {
+                return newPr;
+              } else {
+                const currPr = prsByProvider.filter((oldPr) => {
+                  return oldPr.id === newPr.id;
+                })[0];
+                return { ...currPr, ...newPr };
+              }
+            });
+            const updatedPrsObj = {
+              ...prs.current,
+              [providerName]: updatedPrs
+            };
+            prs.current = updatedPrsObj;
           }
         })
       );
     },
-    { interval: 300000 }
+    { interval: 10000 }
   );
   return providers.map((provider) => {
     const providerNameLowercase = provider.name.toLowerCase();
