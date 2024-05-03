@@ -31,7 +31,7 @@ function App() {
     hasGithubPrs.current = checkForPrs("github");
     hasGitlabPrs.current = checkForPrs("gitlab");
     hasPrs.current = hasGithubPrs.current || hasGitlabPrs.current;
-  }, [prs, checkForPrs]);
+  }, [prs, checkForPrs, gitlabUser, githubUser]);
   return (
     <div className={cs(styles.App)}>
       <GithubUserContext.Provider value={[githubUser, setGithubUser]}>
